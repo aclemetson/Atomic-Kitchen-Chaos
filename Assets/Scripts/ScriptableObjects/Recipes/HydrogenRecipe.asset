@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe1676c2fa66a8141b55f094b8fee4f0, type: 3}
+  m_Name: HydrogenRecipe
+  m_EditorClassIdentifier: 
+  materials:
+  - atomicObject: {fileID: 11400000, guid: 8db2537279984e249ae3a737ac866c73, type: 2}
+    quantity: 1
+  - atomicObject: {fileID: 11400000, guid: 23818d71bf5f9ca40980b3799d6db687, type: 2}
+    quantity: 1
+  result: {fileID: 11400000, guid: 1c7c5729946afac4a9bf719bacf82908, type: 2}

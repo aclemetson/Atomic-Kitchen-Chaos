@@ -1,0 +1,98 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &2627336422737722991
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7683137250845096783, guid: b048180071e2715428de2aac459856de, type: 3}
+      propertyPath: m_Name
+      value: Generator
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7683137250845096783, guid: b048180071e2715428de2aac459856de, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6232926505254009781}
+  m_SourcePrefab: {fileID: 100100000, guid: b048180071e2715428de2aac459856de, type: 3}
+--- !u!4 &2462455001361473243 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 457758888019812532, guid: b048180071e2715428de2aac459856de, type: 3}
+  m_PrefabInstance: {fileID: 2627336422737722991}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4176081189016530471 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2126340285657993288, guid: b048180071e2715428de2aac459856de, type: 3}
+  m_PrefabInstance: {fileID: 2627336422737722991}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eca84c320069efa4fafa5e3d7965d6a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &5686304776024442144 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7683137250845096783, guid: b048180071e2715428de2aac459856de, type: 3}
+  m_PrefabInstance: {fileID: 2627336422737722991}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6232926505254009781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5686304776024442144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20f2d603d8974a84e8352ceb73e625ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  holdPosition: {fileID: 2462455001361473243}
+  progressBar: {fileID: 4176081189016530471}
+  atomicObjectSO: {fileID: 0}
