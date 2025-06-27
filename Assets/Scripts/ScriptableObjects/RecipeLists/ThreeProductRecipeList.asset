@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bcae0cd21394a5478092dae2445e60b, type: 3}
   m_Name: ThreeProductRecipeList
   m_EditorClassIdentifier: 
-  displayName: 
-  recipeList: []
+  displayName: Three Product Recipe List
+  recipeList:
+  - {fileID: 11400000, guid: b71cf6ed212bfa54d84e9ac1c06fd810, type: 2}

@@ -12,6 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1676c2fa66a8141b55f094b8fee4f0, type: 3}
   m_Name: DeuteriumRecipe
   m_EditorClassIdentifier: 
-  displayName: 
-  materials: []
-  result: {fileID: 0}
+  displayName: Deuterium
+  materials:
+  - atomicObject: {fileID: 11400000, guid: 1c7c5729946afac4a9bf719bacf82908, type: 2}
+    quantity: 1
+  - atomicObject: {fileID: 11400000, guid: 76face64ebb2c37438ba94fb176b6fe7, type: 2}
+    quantity: 1
+  results: []
+  cookTime: 0

@@ -12,7 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1676c2fa66a8141b55f094b8fee4f0, type: 3}
   m_Name: Helium4Recipe
   m_EditorClassIdentifier: 
-  displayName: 
-  materials: []
-  results: []
-  cookTime: 0
+  displayName: Helium4 Recipe
+  materials:
+  - atomicObject: {fileID: 11400000, guid: 5dec9332c8a3eb849b9c74a6780c09cf, type: 2}
+    quantity: 2
+  results:
+  - {fileID: 11400000, guid: 1c7c5729946afac4a9bf719bacf82908, type: 2}
+  - {fileID: 11400000, guid: 1c7c5729946afac4a9bf719bacf82908, type: 2}
+  - {fileID: 11400000, guid: 1137df78e46b10c46b6d6ab193cdbe4f, type: 2}
+  cookTime: 6

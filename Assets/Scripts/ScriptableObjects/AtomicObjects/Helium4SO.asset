@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f5283a09439a184996db915263ea281, type: 3}
   m_Name: Helium4SO
   m_EditorClassIdentifier: 
-  displayName: 
-  atomicObjectPrefab: {fileID: 0}
-  generateTime: 0
+  displayName: Helium4
+  atomicObjectPrefab: {fileID: 7596600573061518962, guid: 96cd7ddfdc5a6c04297850db464ea49f, type: 3}
+  generateTime: 4

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f5283a09439a184996db915263ea281, type: 3}
   m_Name: DeuteriumSO
   m_EditorClassIdentifier: 
-  displayName: 
-  atomicObjectPrefab: {fileID: 0}
-  generateTime: 0
+  displayName: Deuterium
+  atomicObjectPrefab: {fileID: 6235455538149098716, guid: f3155c184d2a2344cae2c5b74e644393, type: 3}
+  generateTime: 3
