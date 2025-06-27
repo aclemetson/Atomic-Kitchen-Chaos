@@ -1,3 +1,5 @@
+using AtomicKitchenChaos.GeneratedObjects;
+using AtomicKitchenChaos.InputActions;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -31,8 +33,8 @@ namespace AtomicKitchenChaos.Players {
             inputActions = new PlayerInputActions();
             primaryInteractionEvent = new UnityEvent();
             secondaryInteractionEvent = new UnityEvent();
-            inputActions.Player.Interact.started += ctx => primaryInteractionEvent.Invoke();
-            inputActions.Player.Settings.started += ctx => secondaryInteractionEvent.Invoke();
+            inputActions.Player.Interact.performed += ctx => primaryInteractionEvent.Invoke();
+            inputActions.Player.Settings.performed += ctx => secondaryInteractionEvent.Invoke();
         }
 
         public bool HasAtomicObject() {

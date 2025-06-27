@@ -1,29 +1,57 @@
 using AtomicKitchenChaos.GeneratedObjects;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace AtomicKitchenChaos.UI {
     public class SettingsPopulatorUI : MonoBehaviour {
+
+        public static SettingsPopulatorUI Instance;
 
         [SerializeField] private TextMeshProUGUI settingsLabel;
         [SerializeField] private SelectableContainerUI containerPrefab;
         [SerializeField] private Transform gridContainer;
 
         private int selectedObject = 0;
+        private UnityEvent<int> selectedEvent;
 
-        public void PopulateSettingsMenu(string settingsText, List<ISettingsObject> list) {
+        private void Awake() {
+            if (Instance == null) {
+                Instance = this;
+            } else {
+                Destroy(gameObject);
+            }
+
+            selectedEvent = new UnityEvent<int>();
+        }
+
+        internal void PopulateSettingsMenu(string settingsText, List<ISettingsObject> list, UnityAction<int> action) {
             settingsLabel.text = settingsText;
+            gameObject.SetActive(true);
+            selectedEvent.AddListener(action);
 
             for (int i = 0; i < list.Count; i++) {
                 var go = Instantiate(containerPrefab, gridContainer);
-                go.gameObject.SetActive(true);
+                go.SetLabel(list[i].DisplayName);
+                int temp = i;
                 go.AddButtonAction(() => {
-                    selectedObject = i;
-                    foreach(Transform child in transform)
-                        Destroy(child);
+                    selectedObject = temp;
+                    selectedEvent.Invoke(selectedObject);
+                    selectedEvent.RemoveListener(action);
+                    foreach (Transform child in gridContainer) {
+                        if (child != containerPrefab.transform) {
+                            Destroy(child.gameObject);
+                        }
+                    }
                     gameObject.SetActive(false);
                     });
+
+                // If these are recipes, populate the ingredients
+                if (list[i] is RecipeSO recipe) {
+                    SetIngredients(go, recipe);
+                }
 
                 if(i == selectedObject || (selectedObject > list.Count && i == 0)) {
                     go.Selected();
@@ -31,6 +59,14 @@ namespace AtomicKitchenChaos.UI {
                     go.Unselected();
                 }
             }
+        }
+
+        private void SetIngredients(SelectableContainerUI obj, RecipeSO recipe) {
+            Dictionary<string, int> ingredients = new();
+            foreach (var material in recipe.materials) {
+                ingredients.Add(material.atomicObject.DisplayName, material.quantity);
+            }
+            obj.PopulateIngredients(ingredients);
         }
     }
 }

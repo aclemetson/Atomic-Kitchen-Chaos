@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f5283a09439a184996db915263ea281, type: 3}
-  m_Name: Proton
+  m_Name: Helium3SO
   m_EditorClassIdentifier: 
-  displayName: Proton
-  atomicObjectPrefab: {fileID: -3253160796499582186, guid: ab6cffc88126bc64a909ad13fae13548, type: 3}
-  generateTime: 1
+  displayName: 
+  atomicObjectPrefab: {fileID: 0}
+  generateTime: 0

@@ -93,6 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20f2d603d8974a84e8352ceb73e625ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdPosition: {fileID: 2462455001361473243}
+  holdPositions:
+  - {fileID: 2462455001361473243}
   progressBar: {fileID: 4176081189016530471}
   atomicObjectSO: {fileID: 0}

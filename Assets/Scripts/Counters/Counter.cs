@@ -1,69 +1,52 @@
 using AtomicKitchenChaos.GeneratedObjects;
 using AtomicKitchenChaos.Players;
 using AtomicKitchenChaos.UI;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace AtomicKitchenChaos.Counters {
     public abstract class Counter : MonoBehaviour {
 
-        protected enum State {
-            Idle,
-            Working,
-            Full,
-        }
-
         protected static readonly string INTERACT_LAYER = "Interact";
 
-        [SerializeField] protected Transform holdPosition;
-        [SerializeField] protected ProgressBarUI progressBar;
-
         protected PlayerManager playerManager;
-        protected bool isInteracted = false;
-        protected State state = State.Idle;
-        protected AtomicObject storedObject;
-
-
-        protected virtual void Start() {
-            playerManager = PlayerManager.Instance;
-            progressBar.OnTimeElapsed.AddListener(FinishedWork);
-        }
+        protected bool isNextTo = false;
+        private bool addedInteraction = false;
 
         protected abstract void Interact();
         protected abstract void SettingsInteraction();
-        protected abstract void StartWork();
-        protected abstract void FinishedWork();
+
+        protected virtual void Start() {
+            playerManager = PlayerManager.Instance;
+        }
 
         private void OnTriggerEnter(Collider other) {
-            if (other.gameObject.layer == LayerMask.NameToLayer(INTERACT_LAYER) && !isInteracted) {
+            if (other.gameObject.layer == LayerMask.NameToLayer(INTERACT_LAYER) && !isNextTo) {
                 AddInteraction();
-                isInteracted = true;
+                isNextTo = true;
             }
         }
 
         private void OnTriggerExit(Collider other) {
-            if (other.gameObject.layer == LayerMask.NameToLayer(INTERACT_LAYER) && isInteracted) {
+            if (other.gameObject.layer == LayerMask.NameToLayer(INTERACT_LAYER) && isNextTo) {
                 RemoveInteraction();
-                isInteracted = false;
+                isNextTo = false;
             }
         }
 
         protected void AddInteraction() {
-            playerManager.PrimaryInteractionEvent.AddListener(Interact);
-            playerManager.SecondaryInteractionEvent.AddListener(SettingsInteraction);
+            if (!addedInteraction) {
+                playerManager.PrimaryInteractionEvent.AddListener(Interact);
+                playerManager.SecondaryInteractionEvent.AddListener(SettingsInteraction);
+                addedInteraction = true;
+            }
         }
 
         protected void RemoveInteraction() {
-            playerManager.PrimaryInteractionEvent.RemoveListener(Interact);
-            playerManager.SecondaryInteractionEvent.RemoveListener(SettingsInteraction);
-        }
-
-        protected void TryCollect() {
-            if (!playerManager.HasAtomicObject()) {
-                playerManager.SetAtomicObject(storedObject);
-                storedObject = null;
-                state = State.Idle;
+            if (addedInteraction) {
+                playerManager.PrimaryInteractionEvent.RemoveListener(Interact);
+                playerManager.SecondaryInteractionEvent.RemoveListener(SettingsInteraction);
+                addedInteraction = false;
             }
         }
     }

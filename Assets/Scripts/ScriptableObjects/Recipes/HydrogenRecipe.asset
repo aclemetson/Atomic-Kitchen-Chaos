@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe1676c2fa66a8141b55f094b8fee4f0, type: 3}
   m_Name: HydrogenRecipe
   m_EditorClassIdentifier: 
+  displayName: Hydrogen
   materials:
   - atomicObject: {fileID: 11400000, guid: 8db2537279984e249ae3a737ac866c73, type: 2}
     quantity: 1

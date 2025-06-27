@@ -1,0 +1,18 @@
+{
+    "name": "AtomicKitchenChaos.Players",
+    "rootNamespace": "",
+    "references": [
+        "GUID:59784d755906b7e4683d3a273915ecab",
+        "GUID:0361278f1d5a6ec45ac3028d10fe26fd",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f5283a09439a184996db915263ea281, type: 3}
-  m_Name: Hydrogen
+  m_Script: {fileID: 11500000, guid: fe1676c2fa66a8141b55f094b8fee4f0, type: 3}
+  m_Name: Helium4Recipe
   m_EditorClassIdentifier: 
-  displayName: Hydrogen
-  atomicObjectPrefab: {fileID: 8989483437542532171, guid: 20c87ea3f58001a478d25935fc9db69b, type: 3}
-  generateTime: 3
+  displayName: 
+  materials: []
+  results: []
+  cookTime: 0

@@ -9,7 +9,8 @@ namespace AtomicKitchenChaos.GeneratedObjects {
 
         public string displayName;
         public Material[] materials;
-        public AtomicObjectSO result;
+        public AtomicObjectSO[] results;
+        public float cookTime;
 
         public string DisplayName => displayName;
 

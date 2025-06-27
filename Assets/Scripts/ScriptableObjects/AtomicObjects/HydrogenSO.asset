@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f5283a09439a184996db915263ea281, type: 3}
-  m_Name: Electron
+  m_Name: HydrogenSO
   m_EditorClassIdentifier: 
-  displayName: Electron
-  atomicObjectPrefab: {fileID: -9084587628851085080, guid: 6c65f751af5514349b8f1a1b1bfa8baf, type: 3}
-  generateTime: 1
+  displayName: Hydrogen
+  atomicObjectPrefab: {fileID: 8989483437542532171, guid: 20c87ea3f58001a478d25935fc9db69b, type: 3}
+  generateTime: 3

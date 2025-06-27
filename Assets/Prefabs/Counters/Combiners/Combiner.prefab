@@ -93,6 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bd52d06be8e394499fc3791fffc8321, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holdPosition: {fileID: 1904498058109364740}
+  holdPositions:
+  - {fileID: 1904498058109364740}
   progressBar: {fileID: 123335060040063736}
-  currentRecipe: {fileID: 0}
+  recipeList: {fileID: 0}

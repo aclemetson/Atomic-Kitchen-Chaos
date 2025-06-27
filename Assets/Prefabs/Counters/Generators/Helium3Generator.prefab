@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &5895965009365864452
+--- !u!1001 &1086536863452355093
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,12 +10,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5686304776024442144, guid: 8d4138cf18ee5dc4ebb5f4eeced9391f, type: 3}
       propertyPath: m_Name
-      value: Electron
+      value: Helium3Generator
       objectReference: {fileID: 0}
     - target: {fileID: 6232926505254009781, guid: 8d4138cf18ee5dc4ebb5f4eeced9391f, type: 3}
       propertyPath: atomicObjectSO
       value: 
-      objectReference: {fileID: 11400000, guid: 23818d71bf5f9ca40980b3799d6db687, type: 2}
+      objectReference: {fileID: 11400000, guid: 5dec9332c8a3eb849b9c74a6780c09cf, type: 2}
     - target: {fileID: 8109927348195821284, guid: 8d4138cf18ee5dc4ebb5f4eeced9391f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -56,10 +56,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8907749993893430308, guid: 8d4138cf18ee5dc4ebb5f4eeced9391f, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 32b70a4a5592abb40ba182d420224bb7, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
