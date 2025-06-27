@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace AtomicKitchenChaos.UI {
-    public class SelectableContainerUI : MonoBehaviour {
+    internal class SelectableContainerUI : MonoBehaviour {
         [SerializeField] private GameObject selectedBackground;
         [SerializeField] private GameObject unselectedBackground;
         [SerializeField] private TextMeshProUGUI titleLabel;

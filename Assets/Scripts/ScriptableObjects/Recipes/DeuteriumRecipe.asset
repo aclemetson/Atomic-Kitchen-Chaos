@@ -15,8 +15,12 @@ MonoBehaviour:
   displayName: Deuterium
   materials:
   - atomicObject: {fileID: 11400000, guid: 1c7c5729946afac4a9bf719bacf82908, type: 2}
+    quantity: 2
+  results:
+  - {fileID: 11400000, guid: 8f9c0222aed43544798a29086984d67a, type: 2}
+  exoticMaterialCounts:
+  - exoticMaterial: {fileID: 11400000, guid: 0a748ecfb3e4c6049aa107ad883a76b5, type: 2}
     quantity: 1
-  - atomicObject: {fileID: 11400000, guid: 76face64ebb2c37438ba94fb176b6fe7, type: 2}
+  - exoticMaterial: {fileID: 11400000, guid: 8341f45e4600daa4fa3340c3c6a55414, type: 2}
     quantity: 1
-  results: []
-  cookTime: 0
+  cookTime: 2

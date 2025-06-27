@@ -18,4 +18,7 @@ MonoBehaviour:
     quantity: 1
   - atomicObject: {fileID: 11400000, guid: 23818d71bf5f9ca40980b3799d6db687, type: 2}
     quantity: 1
-  result: {fileID: 11400000, guid: 1c7c5729946afac4a9bf719bacf82908, type: 2}
+  results:
+  - {fileID: 11400000, guid: 1c7c5729946afac4a9bf719bacf82908, type: 2}
+  exoticMaterialCounts: []
+  cookTime: 1

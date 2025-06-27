@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace AtomicKitchenChaos.UI
 {
-    public class IngredientPopulatorUI : MonoBehaviour
+    internal class IngredientPopulatorUI : MonoBehaviour
     {
         [SerializeField] private IngredientContainerUI ingredientContainerPrefab;
 

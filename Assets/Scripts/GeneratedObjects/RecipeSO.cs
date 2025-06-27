@@ -8,20 +8,31 @@ namespace AtomicKitchenChaos.GeneratedObjects {
     public class RecipeSO : ScriptableObject, ISettingsObject {
 
         public string displayName;
-        public Material[] materials;
+        public MaterialCount[] materials;
         public AtomicObjectSO[] results;
+        public ExoticMaterialCount[] exoticMaterialCounts;
         public float cookTime;
 
         public string DisplayName => displayName;
 
         [Serializable]
-        public struct Material {
+        public struct MaterialCount {
             public AtomicObjectSO atomicObject;
             public int quantity;
         }
 
-        public bool ContainsAtomicObject(AtomicObject target) {
-            return materials.Any(m => m.atomicObject == target);
+        [Serializable]
+        public struct ExoticMaterialCount {
+            public ExoticMaterialSO exoticMaterial;
+            public int quantity;
+        }
+        
+        public Dictionary<ExoticMaterialSO.ExoticMaterial, int> GetExoticMaterialCounts() {
+            var results = new Dictionary<ExoticMaterialSO.ExoticMaterial, int>();
+            foreach (var item in exoticMaterialCounts) {
+                results.Add(item.exoticMaterial.materialName, item.quantity);
+            }
+            return results;
         }
 
         public Dictionary<string, int> GetRecipeDictionary() {
@@ -31,5 +42,7 @@ namespace AtomicKitchenChaos.GeneratedObjects {
             }
             return results;
         }
+
+
     }
 }

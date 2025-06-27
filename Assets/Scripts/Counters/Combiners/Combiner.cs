@@ -1,3 +1,4 @@
+using AtomicKitchenChaos.Game;
 using AtomicKitchenChaos.GeneratedObjects;
 using AtomicKitchenChaos.UI;
 using System.Collections.Generic;
@@ -37,6 +38,7 @@ namespace AtomicKitchenChaos.Counters.Combiners {
                         storedObject.DisplayName = result.displayName;
                     }
                 }
+                ExoticMaterialManager.Instance.HandleExoticMatter(currentRecipe.GetExoticMaterialCounts());
             }
             if (isNextTo) {
                 AddInteraction();

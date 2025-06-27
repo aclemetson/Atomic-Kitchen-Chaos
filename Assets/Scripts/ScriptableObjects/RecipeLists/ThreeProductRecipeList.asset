@@ -15,3 +15,5 @@ MonoBehaviour:
   displayName: Three Product Recipe List
   recipeList:
   - {fileID: 11400000, guid: b71cf6ed212bfa54d84e9ac1c06fd810, type: 2}
+  - {fileID: 11400000, guid: 5e86d2fdf01a3594f89e56ebfe66c368, type: 2}
+  - {fileID: 11400000, guid: a197c1e0e720c3445bfec438dde4a05e, type: 2}

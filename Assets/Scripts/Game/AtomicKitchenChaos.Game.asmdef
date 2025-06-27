@@ -1,7 +1,10 @@
 {
-    "name": "AtomicKitchenChaos.GeneratedObjects",
-    "rootNamespace": "AtomicKitchenChaos.GeneratedObjects",
-    "references": [],
+    "name": "AtomicKitchenChaos.Game",
+    "rootNamespace": "AtomicKitchenChaos.Game",
+    "references": [
+        "GUID:0bb787e2c02795646bb7745826d16652",
+        "GUID:0361278f1d5a6ec45ac3028d10fe26fd"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

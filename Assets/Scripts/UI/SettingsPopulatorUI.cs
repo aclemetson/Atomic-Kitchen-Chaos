@@ -1,14 +1,11 @@
 using AtomicKitchenChaos.GeneratedObjects;
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace AtomicKitchenChaos.UI {
-    public class SettingsPopulatorUI : MonoBehaviour {
-
-        public static SettingsPopulatorUI Instance;
+    internal class SettingsPopulatorUI : MonoBehaviour {
 
         [SerializeField] private TextMeshProUGUI settingsLabel;
         [SerializeField] private SelectableContainerUI containerPrefab;
@@ -18,12 +15,6 @@ namespace AtomicKitchenChaos.UI {
         private UnityEvent<int> selectedEvent;
 
         private void Awake() {
-            if (Instance == null) {
-                Instance = this;
-            } else {
-                Destroy(gameObject);
-            }
-
             selectedEvent = new UnityEvent<int>();
         }
 

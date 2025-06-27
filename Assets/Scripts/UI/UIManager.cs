@@ -8,6 +8,7 @@ namespace AtomicKitchenChaos.UI {
         public static UIManager Instance;
 
         [SerializeField] private SettingsPopulatorUI settingsPopulatorUI;
+        [SerializeField] private ExoticMaterialPanelUI exoticMaterialPanelUI;
 
         private void Awake() {
             if (Instance == null) {
@@ -19,6 +20,10 @@ namespace AtomicKitchenChaos.UI {
 
         public void PopulateSettingsMenu(string settingsText, List<ISettingsObject> list, UnityAction<int> action) {
             settingsPopulatorUI.PopulateSettingsMenu(settingsText, list, action);
+        }
+
+        public void AddExoticMaterialUI(string material, int count) {
+            exoticMaterialPanelUI.AddExoticMaterialUI(material, count);
         }
     }
 }

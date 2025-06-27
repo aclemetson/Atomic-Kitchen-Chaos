@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 
 namespace AtomicKitchenChaos.UI {
-    public class IngredientContainerUI : MonoBehaviour {
+    internal class IngredientContainerUI : MonoBehaviour {
 
         [SerializeField] private TextMeshProUGUI ingredientLabel;
         [SerializeField] private TextMeshProUGUI quantityLabel;
