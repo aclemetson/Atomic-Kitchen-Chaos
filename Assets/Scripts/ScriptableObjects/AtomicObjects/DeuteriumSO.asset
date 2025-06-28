@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: DeuteriumSO
   m_EditorClassIdentifier: 
   displayName: Deuterium
-  atomicObjectPrefab: {fileID: 6235455538149098716, guid: f3155c184d2a2344cae2c5b74e644393, type: 3}
+  atomicSymbol: H
+  protons: 1
+  neutrons: 1
+  electrons: 1
   generateTime: 3

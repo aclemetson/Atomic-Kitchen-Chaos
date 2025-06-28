@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: ProtonSO
   m_EditorClassIdentifier: 
   displayName: Proton
-  atomicObjectPrefab: {fileID: -3253160796499582186, guid: ab6cffc88126bc64a909ad13fae13548, type: 3}
+  atomicSymbol: H
+  protons: 1
+  neutrons: 0
+  electrons: 0
   generateTime: 1

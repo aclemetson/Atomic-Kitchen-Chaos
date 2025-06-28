@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: HydrogenSO
   m_EditorClassIdentifier: 
   displayName: Hydrogen
-  atomicObjectPrefab: {fileID: 8989483437542532171, guid: 20c87ea3f58001a478d25935fc9db69b, type: 3}
+  atomicSymbol: H
+  protons: 1
+  neutrons: 0
+  electrons: 1
   generateTime: 3

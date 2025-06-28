@@ -48,8 +48,9 @@ namespace AtomicKitchenChaos.Players {
             }
         }
 
-        public void RemoveAtomicObject() {
-            Destroy(atomicObject.gameObject);
+        public void RemoveAtomicObject(bool destroy = true) {
+            if(destroy)
+                Destroy(atomicObject.gameObject);
             atomicObject = null;
         }
 

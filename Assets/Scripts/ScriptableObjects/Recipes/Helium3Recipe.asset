@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe1676c2fa66a8141b55f094b8fee4f0, type: 3}
+  m_Name: Helium3Recipe
+  m_EditorClassIdentifier: 
+  displayName: Helium3 Recipe
+  materials:
+  - atomicObject: {fileID: 11400000, guid: 8f9c0222aed43544798a29086984d67a, type: 2}
+    quantity: 1
+  - atomicObject: {fileID: 11400000, guid: 1c7c5729946afac4a9bf719bacf82908, type: 2}
+    quantity: 1
+  results:
+  - {fileID: 11400000, guid: 5dec9332c8a3eb849b9c74a6780c09cf, type: 2}
+  exoticMaterialCounts:
+  - exoticMaterial: {fileID: 11400000, guid: 4e0aa6817227aac41ab57663fda8c832, type: 2}
+    quantity: 1
+  cookTime: 3

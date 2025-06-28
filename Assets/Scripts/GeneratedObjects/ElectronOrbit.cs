@@ -2,13 +2,13 @@ using UnityEngine;
 
 namespace AtomicKitchenChaos.GeneratedObjects {
     public class ElectronOrbit : MonoBehaviour {
-        [SerializeField] private Transform nucleus;
-        [SerializeField] private float orbitRadius = .6f;
         [SerializeField] private float orbitSpeed = 720f;
         [SerializeField] private float precessionSpeed = 10f;
 
+        private Transform nucleus;
         private Vector3 orbitAxis;
         private Vector3 orbitStartOffset;
+        private float orbitRadius = .6f;
 
         private void Start() {
             if (nucleus != null) {
@@ -32,6 +32,14 @@ namespace AtomicKitchenChaos.GeneratedObjects {
 
                 transform.RotateAround(nucleus.position, orbitAxis, orbitSpeed * Time.deltaTime);
             }
+        }
+
+        internal void SetOrbitRadius(float orbitRadius) {
+            this.orbitRadius = orbitRadius;
+        }
+
+        internal void SetNucleusLocation(Transform nucleus) {
+            this.nucleus = nucleus;
         }
     }
 }

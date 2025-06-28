@@ -1,3 +1,4 @@
+using AtomicKitchenChaos.GeneratedObjects;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -31,7 +32,7 @@ namespace AtomicKitchenChaos.UI {
             titleLabel.text = label;
         }
 
-        internal void PopulateIngredients(Dictionary<string, int> ingredients) {
+        internal void PopulateIngredients(Dictionary<AtomicObjectSO, int> ingredients) {
             ingredientPopulatorUI.PopulateIngredients(ingredients);
         }
     }

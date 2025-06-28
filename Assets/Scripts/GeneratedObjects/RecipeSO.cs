@@ -35,10 +35,10 @@ namespace AtomicKitchenChaos.GeneratedObjects {
             return results;
         }
 
-        public Dictionary<string, int> GetRecipeDictionary() {
-            var results = new Dictionary<string, int>();
+        public Dictionary<AtomicObjectSO, int> GetRecipeDictionary() {
+            var results = new Dictionary<AtomicObjectSO, int>();
             foreach (var item in materials) {
-                results.Add(item.atomicObject.displayName, item.quantity);
+                results.Add(item.atomicObject, item.quantity);
             }
             return results;
         }

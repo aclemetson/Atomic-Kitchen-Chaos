@@ -3,19 +3,25 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace AtomicKitchenChaos.UI {
     internal class SettingsPopulatorUI : MonoBehaviour {
 
+        [Header("Properties")]
         [SerializeField] private TextMeshProUGUI settingsLabel;
         [SerializeField] private SelectableContainerUI containerPrefab;
         [SerializeField] private Transform gridContainer;
+
+        [Header("Buttons")]
+        [SerializeField] private Button backButton;
 
         private int selectedObject = 0;
         private UnityEvent<int> selectedEvent;
 
         private void Awake() {
             selectedEvent = new UnityEvent<int>();
+            backButton.onClick.AddListener(CloseMenu);
         }
 
         internal void PopulateSettingsMenu(string settingsText, List<ISettingsObject> list, UnityAction<int> action) {
@@ -31,12 +37,7 @@ namespace AtomicKitchenChaos.UI {
                     selectedObject = temp;
                     selectedEvent.Invoke(selectedObject);
                     selectedEvent.RemoveListener(action);
-                    foreach (Transform child in gridContainer) {
-                        if (child != containerPrefab.transform) {
-                            Destroy(child.gameObject);
-                        }
-                    }
-                    gameObject.SetActive(false);
+                    CloseMenu();
                     });
 
                 // If these are recipes, populate the ingredients
@@ -53,11 +54,20 @@ namespace AtomicKitchenChaos.UI {
         }
 
         private void SetIngredients(SelectableContainerUI obj, RecipeSO recipe) {
-            Dictionary<string, int> ingredients = new();
+            Dictionary<AtomicObjectSO, int> ingredients = new();
             foreach (var material in recipe.materials) {
-                ingredients.Add(material.atomicObject.DisplayName, material.quantity);
+                ingredients.Add(material.atomicObject, material.quantity);
             }
             obj.PopulateIngredients(ingredients);
+        }
+
+        private void CloseMenu() {
+            foreach (Transform child in gridContainer) {
+                if (child != containerPrefab.transform) {
+                    Destroy(child.gameObject);
+                }
+            }
+            gameObject.SetActive(false);
         }
     }
 }

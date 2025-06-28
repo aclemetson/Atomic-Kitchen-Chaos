@@ -1,8 +1,8 @@
 using AtomicKitchenChaos.GeneratedObjects;
 using AtomicKitchenChaos.Players;
 using AtomicKitchenChaos.UI;
+using System;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace AtomicKitchenChaos.Counters {
     public abstract class Counter : MonoBehaviour {
@@ -48,6 +48,20 @@ namespace AtomicKitchenChaos.Counters {
                 playerManager.SecondaryInteractionEvent.RemoveListener(SettingsInteraction);
                 addedInteraction = false;
             }
+        }
+
+        protected void SetLabel(AtomicObjectSO atomicObjectSO, AtomLabelContainerUI atomLabelContainerUI) {
+            atomLabelContainerUI.SetAtomPanel(atomicObjectSO);
+        }
+
+        protected void ClearLabel(AtomLabelContainerUI atomLabelContainerUI) {
+            atomLabelContainerUI.ClearLabel();
+        }
+
+        [Serializable]
+        protected struct HoldPosition {
+            public Transform transform;
+            public AtomLabelContainerUI atomLabelContainerUI;
         }
     }
 }

@@ -1,16 +1,21 @@
+using AtomicKitchenChaos.GeneratedObjects;
 using TMPro;
 using UnityEngine;
 
 namespace AtomicKitchenChaos.UI {
-    internal class IngredientContainerUI : MonoBehaviour {
+    public class IngredientContainerUI : MonoBehaviour {
 
-        [SerializeField] private TextMeshProUGUI ingredientLabel;
+        [SerializeField] private AtomLabelContainerUI ingredientLabel;
         [SerializeField] private TextMeshProUGUI quantityLabel;
 
-        internal void SetIngredient(string name, int quantity) {
+        public void SetData(AtomicObjectSO atomicObjectSO, int quantity) {
             gameObject.SetActive(true);
-            ingredientLabel.text = name;
-            quantityLabel.text = quantity.ToString();
+            ingredientLabel.SetAtomPanel(atomicObjectSO);
+            SetQuantity(quantity);
+        }
+
+        public void SetQuantity(int quantity) {
+            quantityLabel.text = $"x{quantity}";
         }
     }
 }

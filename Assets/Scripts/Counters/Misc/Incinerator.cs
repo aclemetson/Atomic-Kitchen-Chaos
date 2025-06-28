@@ -1,7 +1,5 @@
-using AtomicKitchenChaos.Players;
-using UnityEngine;
 
-namespace AtomicKitchenChaos.Counters
+namespace AtomicKitchenChaos.Counters.Misc
 {
     public class Incinerator : Counter {
 

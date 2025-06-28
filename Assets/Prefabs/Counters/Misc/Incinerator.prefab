@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.11
+      value: -5.78
       objectReference: {fileID: 0}
     - target: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
       propertyPath: m_LocalPosition.y
@@ -56,10 +56,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Incinerator
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 28442160013378620, guid: b048180071e2715428de2aac459856de, type: 3}
     m_RemovedGameObjects:
     - {fileID: 4892282734610318510, guid: b048180071e2715428de2aac459856de, type: 3}
     - {fileID: 175086045949694969, guid: b048180071e2715428de2aac459856de, type: 3}
+    - {fileID: 8261010860670216148, guid: b048180071e2715428de2aac459856de, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7683137250845096783, guid: b048180071e2715428de2aac459856de, type: 3}

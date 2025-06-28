@@ -9,6 +9,7 @@ namespace AtomicKitchenChaos.UI {
 
         [SerializeField] private SettingsPopulatorUI settingsPopulatorUI;
         [SerializeField] private ExoticMaterialPanelUI exoticMaterialPanelUI;
+        [SerializeField] private HUDUI hudUI;
 
         private void Awake() {
             if (Instance == null) {
@@ -24,6 +25,10 @@ namespace AtomicKitchenChaos.UI {
 
         public void AddExoticMaterialUI(string material, int count) {
             exoticMaterialPanelUI.AddExoticMaterialUI(material, count);
+        }
+
+        public void SetQuarkCount(int quarkCount) {
+            hudUI.SetQuarkCount(quarkCount);
         }
     }
 }

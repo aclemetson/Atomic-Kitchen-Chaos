@@ -1,4 +1,5 @@
 using AtomicKitchenChaos.GeneratedObjects;
+using AtomicKitchenChaos.UI;
 using UnityEngine;
 
 namespace AtomicKitchenChaos.Counters.Generators {
@@ -8,6 +9,9 @@ namespace AtomicKitchenChaos.Counters.Generators {
 
         protected override void Start() {
             base.Start();
+            foreach(var item in holdPositions) {
+                ClearLabel(item.atomLabelContainerUI);
+            }
             StartWork();
             state = State.Working;
         }
@@ -23,9 +27,10 @@ namespace AtomicKitchenChaos.Counters.Generators {
 
         protected override void FinishedWork() {
             state = State.Full;
-            if (atomicObjectSO != null && atomicObjectSO.atomicObjectPrefab != null) {
-                storedObject = Instantiate(atomicObjectSO.atomicObjectPrefab, holdPositions[0]);
-                storedObject.DisplayName = atomicObjectSO.displayName;
+            if (atomicObjectSO != null && atomPrefab != null) {
+                var go = Instantiate(atomPrefab, holdPositions[0].transform);
+                SetAtomicObject(go, atomicObjectSO);
+                SetLabel(atomicObjectSO, holdPositions[0].atomLabelContainerUI);
             }
             if (isNextTo) {
                 AddInteraction();

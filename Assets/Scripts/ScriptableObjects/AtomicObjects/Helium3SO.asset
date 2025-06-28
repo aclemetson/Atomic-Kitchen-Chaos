@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: Helium3SO
   m_EditorClassIdentifier: 
   displayName: Helium3
-  atomicObjectPrefab: {fileID: 9015809612071592211, guid: d815d33c452852d42804395d322619c1, type: 3}
+  atomicSymbol: He
+  protons: 2
+  neutrons: 1
+  electrons: 2
   generateTime: 3

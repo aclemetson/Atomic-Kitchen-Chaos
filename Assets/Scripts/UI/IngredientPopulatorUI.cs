@@ -1,3 +1,4 @@
+using AtomicKitchenChaos.GeneratedObjects;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,10 +8,10 @@ namespace AtomicKitchenChaos.UI
     {
         [SerializeField] private IngredientContainerUI ingredientContainerPrefab;
 
-        internal void PopulateIngredients(Dictionary<string, int> ingredientList) {
+        internal void PopulateIngredients(Dictionary<AtomicObjectSO, int> ingredientList) {
             foreach (var item in ingredientList) {
                 var go = Instantiate(ingredientContainerPrefab, transform);
-                go.SetIngredient(item.Key, item.Value);
+                go.SetData(item.Key, item.Value);
             }
         }
     }

@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: NeutronSO
   m_EditorClassIdentifier: 
   displayName: Neutron
-  atomicObjectPrefab: {fileID: -3253160796499582186, guid: 43f19e43775de4e41868fa3d92f66602, type: 3}
+  atomicSymbol: n
+  protons: 0
+  neutrons: 1
+  electrons: 0
   generateTime: 1
