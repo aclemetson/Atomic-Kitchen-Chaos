@@ -172,7 +172,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
       propertyPath: m_LocalRotation.x
@@ -180,7 +180,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
       propertyPath: m_LocalRotation.z
@@ -192,7 +192,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -330,5 +330,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ingredientContainerUI: {fileID: 8593295177751480492}
-  request: {fileID: 11400000, guid: 1c7c5729946afac4a9bf719bacf82908, type: 2}
-  quantity: 2

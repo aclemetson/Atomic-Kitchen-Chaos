@@ -1,5 +1,5 @@
-using AtomicKitchenChaos.GeneratedObjects;
-using AtomicKitchenChaos.Players;
+using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
+using AtomicKitchenChaos.GeneratedObjects.AtomicObjects;
 using AtomicKitchenChaos.UI;
 using System.Linq;
 using UnityEngine;
@@ -17,6 +17,9 @@ namespace AtomicKitchenChaos.Counters
         [SerializeField] protected HoldPosition[] holdPositions;
         [SerializeField] protected ProgressBarUI progressBar;
         [SerializeField] protected AtomicObject atomPrefab;
+
+        [Header("Visual Properties")]
+        [SerializeField] private GameObject visualObject;
 
         protected State state = State.Idle;
 
@@ -64,5 +67,11 @@ namespace AtomicKitchenChaos.Counters
             obj.GetComponent<ElectronGenerator>().GenerateElectrons(so.electrons);
             obj.atomicObjectSO = so;
         }
+
+
+        protected void CustomizeVisual() {
+            visualObject.GetComponent<MeshRenderer>().material = counterSO.material;
+        }
+
     }
 }

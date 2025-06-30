@@ -27,7 +27,7 @@ namespace AtomicKitchenChaos.UI {
             exoticMaterialPanelUI.AddExoticMaterialUI(material, count);
         }
 
-        public void SetQuarkCount(int quarkCount) {
+        public void SetQuarkCount(long quarkCount) {
             hudUI.SetQuarkCount(quarkCount);
         }
     }

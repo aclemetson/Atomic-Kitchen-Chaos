@@ -1,17 +1,27 @@
-using AtomicKitchenChaos.GeneratedObjects;
-using AtomicKitchenChaos.UI;
+using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using UnityEngine;
 
 namespace AtomicKitchenChaos.Counters.Generators {
     public class Generator : Worker {
 
-        [SerializeField] private AtomicObjectSO atomicObjectSO;
+
+
+        private GeneratorSO generatorSO;
 
         protected override void Start() {
             base.Start();
+
+            generatorSO = (GeneratorSO)counterSO;
+
+            // Clear all Labels
             foreach(var item in holdPositions) {
                 ClearLabel(item.atomLabelContainerUI);
             }
+
+            // Customize the Visual
+            CustomizeVisual();
+
+            // Start Generating
             StartWork();
             state = State.Working;
         }
@@ -27,10 +37,10 @@ namespace AtomicKitchenChaos.Counters.Generators {
 
         protected override void FinishedWork() {
             state = State.Full;
-            if (atomicObjectSO != null && atomPrefab != null) {
+            if (generatorSO.atomicObjectSO != null && atomPrefab != null) {
                 var go = Instantiate(atomPrefab, holdPositions[0].transform);
-                SetAtomicObject(go, atomicObjectSO);
-                SetLabel(atomicObjectSO, holdPositions[0].atomLabelContainerUI);
+                SetAtomicObject(go, generatorSO.atomicObjectSO);
+                SetLabel(generatorSO.atomicObjectSO, holdPositions[0].atomLabelContainerUI);
             }
             if (isNextTo) {
                 AddInteraction();
@@ -38,12 +48,10 @@ namespace AtomicKitchenChaos.Counters.Generators {
         }
 
         protected override void StartWork() {
-            progressBar.SetFillTime(atomicObjectSO.generateTime);
+            progressBar.SetFillTime(generatorSO.atomicObjectSO.generateTime);
         }
 
-
         protected override void SettingsInteraction() {
-
         }
     }
 }

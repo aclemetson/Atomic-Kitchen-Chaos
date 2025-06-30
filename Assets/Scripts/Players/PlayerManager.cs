@@ -1,4 +1,4 @@
-using AtomicKitchenChaos.GeneratedObjects;
+using AtomicKitchenChaos.GeneratedObjects.AtomicObjects;
 using AtomicKitchenChaos.InputActions;
 using UnityEngine;
 using UnityEngine.Events;

@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ee7e433a77693943814a85a1e2ec917, type: 3}
+  m_Name: SubmissionCounterSO
+  m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: 03f56ba3d8d47c447af07bbd058fc739, type: 2}
+  counterPrefabPath: Assets/Prefabs/Counters/Misc/SubmissionCounter.prefab
+  levelRequirementSO: {fileID: 11400000, guid: 1ef79a81cdd2a6a4796e7159ca82f51a, type: 2}

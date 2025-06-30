@@ -1,4 +1,4 @@
-using AtomicKitchenChaos.GeneratedObjects;
+using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using AtomicKitchenChaos.UI;
 using System.Collections.Generic;
 using UnityEngine;

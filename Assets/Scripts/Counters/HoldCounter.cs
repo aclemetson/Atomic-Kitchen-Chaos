@@ -1,6 +1,6 @@
-using AtomicKitchenChaos.GeneratedObjects;
+using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
+using AtomicKitchenChaos.GeneratedObjects.AtomicObjects;
 using AtomicKitchenChaos.UI;
-using System;
 using UnityEngine;
 
 namespace AtomicKitchenChaos.Counters

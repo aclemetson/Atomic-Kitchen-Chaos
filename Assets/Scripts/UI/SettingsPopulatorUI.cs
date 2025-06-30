@@ -1,4 +1,5 @@
 using AtomicKitchenChaos.GeneratedObjects;
+using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;

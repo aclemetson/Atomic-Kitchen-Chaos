@@ -1,8 +1,10 @@
+
 namespace AtomicKitchenChaos.Level
 {
     public struct LevelData 
     {
-        public string Name { get; set; }
-
+        public string LevelName;
+        public CounterData[] Counters;
+        public string levelRequirementSOPath;
     }
 }

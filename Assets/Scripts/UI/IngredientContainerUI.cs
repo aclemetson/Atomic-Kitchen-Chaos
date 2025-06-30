@@ -1,4 +1,4 @@
-using AtomicKitchenChaos.GeneratedObjects;
+using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using TMPro;
 using UnityEngine;
 

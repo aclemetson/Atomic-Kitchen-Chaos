@@ -1,8 +1,8 @@
 using AtomicKitchenChaos.Game;
-using AtomicKitchenChaos.GeneratedObjects;
+using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using AtomicKitchenChaos.UI;
-using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 
 namespace AtomicKitchenChaos.Counters.Misc
@@ -11,13 +11,15 @@ namespace AtomicKitchenChaos.Counters.Misc
 
         [SerializeField] private IngredientContainerUI ingredientContainerUI;
 
-        [SerializeField] private AtomicObjectSO request;
-        [SerializeField] private int quantity;
         private int reward = 10;
+        private SubmissionCounterSO submissionCounterSO;
+        private AtomicObjectSO request;
+        private int quantity;
 
         protected override void Start() {
             base.Start();
-            ingredientContainerUI.SetData(request, quantity);
+            submissionCounterSO = (SubmissionCounterSO)counterSO;
+            SetRequest();
         }
 
         protected override void Interact() {
@@ -30,6 +32,7 @@ namespace AtomicKitchenChaos.Counters.Misc
 
                 if(quantity == 0) {
                     ClaimReward();
+                    SetRequest();
                 }
             }
         }
@@ -42,9 +45,16 @@ namespace AtomicKitchenChaos.Counters.Misc
             GameManager.Instance.AddToQuarkCount(reward);
         }
 
-        public void SetRequest(AtomicObjectSO request, int quantity) {
-            this.request = request;
-            this.quantity = quantity;
+        private void SetRequest() {
+            LevelRequirementSO.AtomicObjectRequest[] atomicObjectRequests = submissionCounterSO.levelRequirementSO.atomicObjectRequests.Where(x => !x.isLocked).ToArray();
+            int randomIndex = Random.Range(0, atomicObjectRequests.Length);
+
+            LevelRequirementSO.AtomicObjectRequest randomSelection = atomicObjectRequests[randomIndex];
+            request = randomSelection.atomicObjectSO;
+            quantity = 1;
+            reward = Random.Range((int)randomSelection.rewardMinimum, (int)randomSelection.rewardMaximum);
+
+            ingredientContainerUI.SetData(request, quantity);
         }
     }
 }

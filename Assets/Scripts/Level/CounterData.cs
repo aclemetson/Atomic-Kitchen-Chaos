@@ -1,21 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using AtomicKitchenChaos.Data;
+using System;
 
 namespace AtomicKitchenChaos.Level
 {
-    public class CounterData : MonoBehaviour
+    [Serializable]
+    public struct CounterData
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
+        public CompressableStructs.CompressableVector3 position;
+        public string counterSOpath;
+        public bool isActive;
+        public int purchasePrice;
     }
 }

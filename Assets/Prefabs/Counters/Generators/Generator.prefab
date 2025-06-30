@@ -130,7 +130,13 @@ MonoBehaviour:
     atomLabelContainerUI: {fileID: 5804976974702638379}
   progressBar: {fileID: 3379117258091936777}
   atomPrefab: {fileID: 5527865518452588836, guid: 4a970e9ec43e28a49b3aa3ae46fd32c8, type: 3}
-  atomicObjectSO: {fileID: 0}
+  generatorSO: {fileID: 0}
+  visualObject: {fileID: 348478295535736927}
+--- !u!1 &348478295535736927 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3761312972747587291, guid: 60ee5dd3553192f409561bf5e5f1c697, type: 3}
+  m_PrefabInstance: {fileID: 3523175080536794756}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3379117258091936777 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2162251393120950925, guid: 60ee5dd3553192f409561bf5e5f1c697, type: 3}

@@ -1,7 +1,8 @@
-using AtomicKitchenChaos.GeneratedObjects;
+using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using AtomicKitchenChaos.Players;
 using AtomicKitchenChaos.UI;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace AtomicKitchenChaos.Counters {
@@ -11,6 +12,7 @@ namespace AtomicKitchenChaos.Counters {
 
         protected PlayerManager playerManager;
         protected bool isNextTo = false;
+        protected CounterSO counterSO;
         private bool addedInteraction = false;
 
         protected abstract void Interact();
@@ -50,6 +52,10 @@ namespace AtomicKitchenChaos.Counters {
             }
         }
 
+        public void SetCounterSO(CounterSO counterSO) {
+            this.counterSO = counterSO;
+        }
+
         protected void SetLabel(AtomicObjectSO atomicObjectSO, AtomLabelContainerUI atomLabelContainerUI) {
             atomLabelContainerUI.SetAtomPanel(atomicObjectSO);
         }
@@ -63,5 +69,6 @@ namespace AtomicKitchenChaos.Counters {
             public Transform transform;
             public AtomLabelContainerUI atomLabelContainerUI;
         }
+
     }
 }

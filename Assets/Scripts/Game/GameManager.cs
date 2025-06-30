@@ -7,8 +7,9 @@ namespace AtomicKitchenChaos.Game
     {
         public static GameManager Instance;
 
-        private int quarkCount = 0;
+        private long quarkCount = 0;
 
+        public long QuarkCount => quarkCount;
         private void Awake() {
             if (Instance == null) {
                 Instance = this;
@@ -17,8 +18,13 @@ namespace AtomicKitchenChaos.Game
             }
         }
 
-        public void AddToQuarkCount(int quarkCount) {
+        public void AddToQuarkCount(long quarkCount) {
             this.quarkCount += quarkCount;
+            UIManager.Instance.SetQuarkCount(this.quarkCount);
+        }
+
+        public void SubtractFromQuarkCount(long quarkCount) {
+            this.quarkCount -= quarkCount;
             UIManager.Instance.SetQuarkCount(this.quarkCount);
         }
     }

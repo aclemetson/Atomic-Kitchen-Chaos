@@ -1,7 +1,12 @@
 {
     "name": "AtomicKitchenChaos.Level",
     "rootNamespace": "AtomicKitchenChaos.Level",
-    "references": [],
+    "references": [
+        "GUID:a734d771bf360db44a6a6baee70f39d6",
+        "GUID:324b279cec89de9498a03c8995143e70",
+        "GUID:0361278f1d5a6ec45ac3028d10fe26fd",
+        "GUID:02bcb27c7d6d8a24688c2ca183ee4d9e"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

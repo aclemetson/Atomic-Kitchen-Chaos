@@ -1,5 +1,6 @@
 using AtomicKitchenChaos.Game;
 using AtomicKitchenChaos.GeneratedObjects;
+using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using AtomicKitchenChaos.UI;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +9,27 @@ using UnityEngine;
 namespace AtomicKitchenChaos.Counters.Combiners {
     public class Combiner : Worker {
 
-        [SerializeField] private RecipeListSO recipeList;
         [SerializeField] private CombinerRecipePanelUI recipePanelUI;
 
+        private CombinerSO combinerSO;
+        private RecipeListSO recipeListSO;
         private int recipeIndex = 0;
         private RecipeSO currentRecipe;
 
         private Dictionary<AtomicObjectSO, int> recipeCounts;
+        protected override void Start() {
+            base.Start();
+
+            combinerSO = (CombinerSO)counterSO;
+            recipeListSO = combinerSO.recipeListSO;
+
+            SetNewRecipe(recipeIndex);
+            foreach (var item in holdPositions) {
+                ClearLabel(item.atomLabelContainerUI);
+            }
+
+            CustomizeVisual();
+        }
 
         protected override void Interact() {
             if (state == State.Idle) {
@@ -46,14 +61,6 @@ namespace AtomicKitchenChaos.Counters.Combiners {
             }
         }
 
-        protected override void Start() {
-            base.Start();
-            SetNewRecipe(recipeIndex);
-            foreach (var item in holdPositions) {
-                ClearLabel(item.atomLabelContainerUI);
-            }
-        }
-
         protected override void StartWork() {
             if (playerManager.HasAtomicObject()) {
                 AtomicObjectSO playerObjectSO = playerManager.AtomicObject.atomicObjectSO;
@@ -74,21 +81,21 @@ namespace AtomicKitchenChaos.Counters.Combiners {
         }
 
         protected override void SettingsInteraction() {
-            UIManager.Instance.PopulateSettingsMenu("Select Recipe", recipeList.recipeList.Cast<ISettingsObject>().ToList(), SetNewRecipe);
+            UIManager.Instance.PopulateSettingsMenu("Select Recipe", recipeListSO.recipeList.Cast<ISettingsObject>().ToList(), SetNewRecipe);
         }
 
         private void SetNewRecipe(int recipeIndex) {
-            if (recipeList.recipeList.Count == 0) {
-                Debug.LogError($"Recipe List {recipeList.displayName} does not have any recipes.");
+            if (recipeListSO.recipeList.Count == 0) {
+                Debug.LogError($"Recipe List {recipeListSO.displayName} does not have any recipes.");
                 return;
             }
 
-            if (recipeIndex >= recipeList.recipeList.Count) {
-                Debug.LogError($"Recipe List {recipeList.displayName} has an inconsistent indexing issue.");
+            if (recipeIndex >= recipeListSO.recipeList.Count) {
+                Debug.LogError($"Recipe List {recipeListSO.displayName} has an inconsistent indexing issue.");
                 return;
             }
 
-            currentRecipe = recipeList.recipeList[recipeIndex];
+            currentRecipe = recipeListSO.recipeList[recipeIndex];
             ResetRecipe();
 
             if(currentRecipe.results.Length > holdPositions.Length) {

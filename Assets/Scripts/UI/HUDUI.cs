@@ -1,3 +1,4 @@
+using AtomicKitchenChaos.Utility;
 using System;
 using TMPro;
 using UnityEngine;
@@ -11,7 +12,6 @@ namespace AtomicKitchenChaos.UI
         [SerializeField] private TextMeshProUGUI timerGUI;
         [SerializeField] private Button menuButton;
 
-        private bool startTimer = false;
         private float clock = 0f;
         private int lastDisplayedSecond = -1;
 
@@ -30,8 +30,8 @@ namespace AtomicKitchenChaos.UI
             }
         }
 
-        internal void SetQuarkCount(int quarkCount) {
-            quarkCountGUI.text = quarkCount.ToString();
+        internal void SetQuarkCount(long quarkCount) {
+            quarkCountGUI.text = NumberFormatter.FormatNumber(quarkCount);
         }
 
         // Time is in seconds
