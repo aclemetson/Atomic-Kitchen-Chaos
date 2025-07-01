@@ -1,3 +1,4 @@
+using AtomicKitchenChaos.Messages;
 using AtomicKitchenChaos.UI;
 using UnityEngine;
 
@@ -16,15 +17,12 @@ namespace AtomicKitchenChaos.Game
             } else {
                 Destroy(gameObject);
             }
+
+            GameEventBus.Subscribe<UpdateQuarkMessage>(UpdateQuarks);
         }
 
-        public void AddToQuarkCount(long quarkCount) {
-            this.quarkCount += quarkCount;
-            UIManager.Instance.SetQuarkCount(this.quarkCount);
-        }
-
-        public void SubtractFromQuarkCount(long quarkCount) {
-            this.quarkCount -= quarkCount;
+        private void UpdateQuarks(UpdateQuarkMessage payload) {
+            this.quarkCount += payload.changeInQuarks;
             UIManager.Instance.SetQuarkCount(this.quarkCount);
         }
     }

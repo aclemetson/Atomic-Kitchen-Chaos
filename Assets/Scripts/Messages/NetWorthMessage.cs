@@ -1,13 +1,11 @@
+using System;
 using UnityEditor;
 
 namespace AtomicKitchenChaos.Messages
 {
-    public class NetWorthMessage : GameEventMessage
+    [Serializable]
+    public class NetWorthMessage : AtomicObjectRequestUnlockMessage
     {
         public long value;
-
-        public override void EditorDrawingFunction() {
-            value = EditorGUILayout.LongField("Desired Net Worth", value);
-        }
     }
 }

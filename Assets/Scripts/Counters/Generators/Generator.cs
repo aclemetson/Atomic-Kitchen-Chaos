@@ -4,8 +4,6 @@ using UnityEngine;
 namespace AtomicKitchenChaos.Counters.Generators {
     public class Generator : Worker {
 
-
-
         private GeneratorSO generatorSO;
 
         protected override void Start() {

@@ -1,8 +1,14 @@
+using AtomicKitchenChaos.Data;
 using AtomicKitchenChaos.Game;
 using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
+using AtomicKitchenChaos.Messages;
 using AtomicKitchenChaos.UI;
+using AtomicKitchenChaos.Utility;
+using System;
 using System.Linq;
-using UnityEditor.PackageManager.Requests;
+using System.Linq.Expressions;
+using System.Reflection;
+using UnityEditor;
 using UnityEngine;
 
 namespace AtomicKitchenChaos.Counters.Misc
@@ -20,6 +26,14 @@ namespace AtomicKitchenChaos.Counters.Misc
             base.Start();
             submissionCounterSO = (SubmissionCounterSO)counterSO;
             SetRequest();
+            for(int i = 0; i < submissionCounterSO.levelRequirementData.atomicObjectRequests.Length; i++) {
+                int capturedIndex = i;
+                var atomicObjectRequest = submissionCounterSO.levelRequirementData.atomicObjectRequests[i];
+                foreach(var message in atomicObjectRequest.unlockMessages) {
+                    AtomicObjectRequestUnlockMessage temp = (AtomicObjectRequestUnlockMessage)message;
+                    GameEventBus.AssignGenericUnlockSubscription(temp, () => { UnlockAtomicObjectRequest(capturedIndex); });
+                }
+            }
         }
 
         protected override void Interact() {
@@ -42,19 +56,23 @@ namespace AtomicKitchenChaos.Counters.Misc
         }
 
         private void ClaimReward() {
-            GameManager.Instance.AddToQuarkCount(reward);
+            GameEventBus.Publish(new UpdateQuarkMessage() { changeInQuarks = reward });
         }
 
         private void SetRequest() {
-            LevelRequirementSO.AtomicObjectRequest[] atomicObjectRequests = submissionCounterSO.levelRequirementSO.atomicObjectRequests.Where(x => !x.isLocked).ToArray();
-            int randomIndex = Random.Range(0, atomicObjectRequests.Length);
+            LevelRequirementData.AtomicObjectRequest[] atomicObjectRequests = submissionCounterSO.levelRequirementData.atomicObjectRequests.Where(x => !x.isLocked).ToArray();
+            int randomIndex = UnityEngine.Random.Range(0, atomicObjectRequests.Length);
 
-            LevelRequirementSO.AtomicObjectRequest randomSelection = atomicObjectRequests[randomIndex];
-            request = randomSelection.atomicObjectSO;
+            LevelRequirementData.AtomicObjectRequest randomSelection = atomicObjectRequests[randomIndex];
+            DataHandler.TryLoadSO(randomSelection.atomicObjectSOPath, out request);
             quantity = 1;
-            reward = Random.Range((int)randomSelection.rewardMinimum, (int)randomSelection.rewardMaximum);
+            reward = UnityEngine.Random.Range((int)randomSelection.rewardMinimum, (int)randomSelection.rewardMaximum);
 
             ingredientContainerUI.SetData(request, quantity);
+        }
+
+        private void UnlockAtomicObjectRequest(int index) {
+            submissionCounterSO.levelRequirementData.atomicObjectRequests[index].isLocked = false;
         }
     }
 }

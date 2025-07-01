@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c59baef3985b74c4ca26f4cd1d8b81db, type: 3}
   m_Name: Combiner1Result
   m_EditorClassIdentifier: 
+  displayName: Combiner 1 Result
   material: {fileID: 2100000, guid: 2d792125982606148ba18b86016237eb, type: 2}
   counterPrefabPath: Assets/Prefabs/Counters/Combiners/Combiner.prefab
   recipeListSO: {fileID: 11400000, guid: 87e8705d4f0fbac4aae629002f9c22d6, type: 2}

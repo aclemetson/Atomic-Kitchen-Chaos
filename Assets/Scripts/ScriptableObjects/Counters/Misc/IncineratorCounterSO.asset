@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d610dea8b5385d74099bb8de1bf90eea, type: 3}
   m_Name: IncineratorCounterSO
   m_EditorClassIdentifier: 
+  displayName: Incinerator
   material: {fileID: 2100000, guid: 84f935063e937bb44b5bc00ec64c2087, type: 2}
   counterPrefabPath: Assets/Prefabs/Counters/Misc/Incinerator.prefab

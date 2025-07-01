@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e3ba3f23c540f3499fe66bcb2877ece, type: 3}
   m_Name: ElectronGeneratorSO
   m_EditorClassIdentifier: 
-  counterPrefabPath: Assets/Prefabs/Counters/Generators/Generator.prefab
+  displayName: Electron Generator
   material: {fileID: 2100000, guid: 32b70a4a5592abb40ba182d420224bb7, type: 2}
+  counterPrefabPath: Assets/Prefabs/Counters/Generators/Generator.prefab
   atomicObjectSO: {fileID: 11400000, guid: 23818d71bf5f9ca40980b3799d6db687, type: 2}

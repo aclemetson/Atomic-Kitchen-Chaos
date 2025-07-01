@@ -1,23 +1,26 @@
+using AtomicKitchenChaos.Data;
+using AtomicKitchenChaos.Editor.MessageMappers;
+using AtomicKitchenChaos.GeneratedObjects.AtomicObjects;
 using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using AtomicKitchenChaos.Messages;
-using Codice.Client.Common.GameUI;
-using Codice.CM.SEIDInfo;
+using AtomicKitchenChaos.Utility;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace AtomicKitchenChaos.Editor
-{
-    public class LevelRequirementsCreatorWindow : EditorWindow
-    {
-        private LevelRequirementSO levelRequirementSO;
-        private List<LevelRequirementSO.AtomicObjectRequest> atomicObjectRequests;
+namespace AtomicKitchenChaos.Editor {
+    public class LevelRequirementsCreatorWindow : EditorWindow {
+        private string levelRequirementName = "NewLevelRequirement";
+        private LevelRequirementData levelRequirementData;
+        private List<LevelRequirementData.AtomicObjectRequest> atomicObjectRequests;
+        private List<AtomicObjectSO> atomicObjectSOs;
         private Vector2 scrollPos;
         private int tileHeight = 100;
 
-        private Type[] availableEventTypes;
+        private static Type[] availableEventTypes;
 
         [MenuItem("Tools/Level Tools/Level Requirements Creator", priority = 20)]
         public static void ShowFullscreenWindow() {
@@ -34,23 +37,29 @@ namespace AtomicKitchenChaos.Editor
                 mainDisplay.height - 4 * margin
             );
 
+            LoadAvailableEventTypes();
             window.Show();
         }
 
-        private void OnGUI() {
-            if(levelRequirementSO == null) {
-                levelRequirementSO = CreateInstance<LevelRequirementSO>();
-            }
+        [MenuItem("Tools/Level Tools/Edit Existing Level Requirements", priority = 21)]
+        public static void EditExistingLevelRequirements() {
+            LoadAvailableEventTypes();
+            LoadLevelRequirementsFromDisk();
+        }
 
+        private void OnGUI() {
             if (atomicObjectRequests == null) {
                 atomicObjectRequests = new();
             }
 
-            if(atomicObjectRequests.Count == 0) {
+            if (atomicObjectRequests.Count == 0) {
                 atomicObjectRequests.Add(default);
             }
 
-            LoadAvailableEventTypes();
+            if (atomicObjectSOs == null) {
+                atomicObjectSOs = new();
+                atomicObjectSOs.Add(null);
+            }
 
             GUILayout.Space(10);
 
@@ -59,8 +68,10 @@ namespace AtomicKitchenChaos.Editor
             EditorGUILayout.BeginVertical("box", GUILayout.Width(400));
             GUILayout.Label("Level Requirements Information", EditorStyles.boldLabel);
 
+            levelRequirementName = EditorGUILayout.TextField("Level Requirement Name", levelRequirementName);
+
             // End Level Completion Task (right now it's a quark amount, will be a message or set of messages
-            levelRequirementSO.levelCompletionTask = EditorGUILayout.LongField("Level Completion Task", levelRequirementSO.levelCompletionTask);
+            levelRequirementData.levelCompletionTask = EditorGUILayout.LongField("Level Completion Task", levelRequirementData.levelCompletionTask);
 
             // Small space before grid header
             GUILayout.Space(10);
@@ -89,6 +100,7 @@ namespace AtomicKitchenChaos.Editor
 
             if (GUILayout.Button($"+ Add Atomic Object Request")) {
                 atomicObjectRequests.Add(default);
+                atomicObjectSOs.Add(null);
             }
 
             GUILayout.Space(20);
@@ -105,6 +117,8 @@ namespace AtomicKitchenChaos.Editor
             GUILayout.EndHorizontal();
 
             GUILayout.Space(10);
+
+            levelRequirementData.atomicObjectRequests = atomicObjectRequests.ToArray();
         }
         private void DrawAtomicObjectRequestList() {
             int removeIndex = -1;
@@ -119,37 +133,45 @@ namespace AtomicKitchenChaos.Editor
                 }
 
                 EditorGUILayout.BeginVertical("box", GUILayout.Width(280));
-                LevelRequirementSO.AtomicObjectRequest atomicObjectRequest = atomicObjectRequests[i];
+                LevelRequirementData.AtomicObjectRequest atomicObjectRequest = atomicObjectRequests[i];
 
-                atomicObjectRequest.atomicObjectSO = (AtomicObjectSO)EditorGUILayout.ObjectField("Atomic Object SO", atomicObjectRequest.atomicObjectSO, typeof(AtomicObjectSO), false);
-                atomicObjectRequest.rewardMinimum = EditorGUILayout.LongField("Reward Minimum", atomicObjectRequest.rewardMaximum);
+                AtomicObjectSO atomicObjectSO = atomicObjectSOs[i];
+                if (!string.IsNullOrEmpty(atomicObjectRequest.atomicObjectSOPath) && atomicObjectSO == null) {
+                    DataHandler.TryLoadSO(atomicObjectRequest.atomicObjectSOPath, out atomicObjectSO);
+                }
+                atomicObjectSO = (AtomicObjectSO)EditorGUILayout.ObjectField("Atomic Object SO", atomicObjectSO, typeof(AtomicObjectSO), false);
+                atomicObjectSOs[i] = atomicObjectSO;
+                string assetPath = AssetDatabase.GetAssetPath(atomicObjectSO);
+                if (atomicObjectRequest.atomicObjectSOPath != assetPath) {
+                    atomicObjectRequest.atomicObjectSOPath = assetPath;
+                }
+
+                atomicObjectRequest.rewardMinimum = EditorGUILayout.LongField("Reward Minimum", atomicObjectRequest.rewardMinimum);
                 atomicObjectRequest.rewardMaximum = EditorGUILayout.LongField("Reward Maximum", atomicObjectRequest.rewardMaximum);
                 atomicObjectRequest.isLocked = EditorGUILayout.Toggle("Is Locked", atomicObjectRequest.isLocked);
 
-                List<GameEventMessage> allEvents;
-                if (atomicObjectRequest.unlockMessage == null) {
-                    atomicObjectRequest.unlockMessage = CreateInstance<AtomicObjectRequestUnlockMessage>();
-                    allEvents = new List<GameEventMessage>();
-                } else {
-                    allEvents = atomicObjectRequest.unlockMessage.unlockRequirements.ToList();
+                List<MessageEditor> allEvents = new();
+                if (atomicObjectRequest.unlockMessages != null) {
+                    foreach (var message in atomicObjectRequest.unlockMessages) {
+                        if (MessageMapper.ATOMIC_OBJECT_REQUEST_UNLOCK_MAPPER.TryGetValue(message.GetType(), out var editorType)) {
+                            var editor = (MessageEditor)Activator.CreateInstance(editorType, message);
+                            allEvents.Add(editor);
+                        }
+                    }
                 }
 
                 EditorGUILayout.Space(10);
                 EditorGUILayout.LabelField("Atomic Object Request Unlock Message", EditorStyles.boldLabel);
                 int eventsRemoveIndex = -1;
 
-                for(int j = 0; j < allEvents.Count; j++) {
+                for (int j = 0; j < allEvents.Count; j++) {
                     var evt = allEvents[j];
 
                     if (evt == null) continue;
 
                     EditorGUILayout.BeginVertical("box");
 
-                    EditorGUI.BeginChangeCheck();
                     evt.EditorDrawingFunction();
-                    if(EditorGUI.EndChangeCheck()) {
-                        EditorUtility.SetDirty(evt);
-                    }
 
                     EditorGUILayout.EndVertical();
                     EditorGUILayout.Space();
@@ -166,7 +188,7 @@ namespace AtomicKitchenChaos.Editor
                 }
 
                 // If the Remove Message Button is pushed
-                if(eventsRemoveIndex >= 0) { allEvents.RemoveAt(eventsRemoveIndex); }
+                if (eventsRemoveIndex >= 0) { allEvents.RemoveAt(eventsRemoveIndex); }
 
                 GUILayout.Space(20);
                 GUILayout.BeginHorizontal();
@@ -174,10 +196,10 @@ namespace AtomicKitchenChaos.Editor
 
                 // If the Add Message Button is pushed
                 GenericMenu menu = LoadGameEventMessages(allEvents, i);
-                if(EditorGUILayout.DropdownButton(new GUIContent("Add Game Message"), FocusType.Keyboard)){
+                if (EditorGUILayout.DropdownButton(new GUIContent("Add Game Message"), FocusType.Keyboard)) {
                     menu.DropDown(new Rect(Event.current.mousePosition, Vector2.zero));
                 }
-                
+
 
                 GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
@@ -194,12 +216,12 @@ namespace AtomicKitchenChaos.Editor
                 GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
 
-                atomicObjectRequest.unlockMessage.unlockRequirements = allEvents.ToArray();
+                atomicObjectRequest.unlockMessages = allEvents.Select(t => t.Message).ToArray();
                 atomicObjectRequests[i] = atomicObjectRequest;
                 GUILayout.EndVertical();
 
                 currentColumn++;
-                if(currentColumn >= columns || i == atomicObjectRequests.Count - 1) {
+                if (currentColumn >= columns || i == atomicObjectRequests.Count - 1) {
                     EditorGUILayout.EndHorizontal();
                     currentColumn = 0;
                 }
@@ -209,24 +231,59 @@ namespace AtomicKitchenChaos.Editor
             if (removeIndex >= 0) { atomicObjectRequests.RemoveAt(removeIndex); }
         }
 
-        private void LoadLevelRequirementsFromDisk() {
-            throw new NotImplementedException();
+        private static void LoadLevelRequirementsFromDisk() {
+            string path = EditorUtility.OpenFilePanel("Select Level Requirement File", Utilities.GetDataPath(Utilities.DIR_LEVEL_REQUIREMENT_DATA), "lz4");
+
+            if (string.IsNullOrEmpty(path)) return;
+
+            try {
+                if (DataHandler.TryLoadFromFile(path, out LevelRequirementData temp)) {
+                    LevelRequirementsCreatorWindow window = GetWindow<LevelRequirementsCreatorWindow>("Level Requirements Creator");
+                    window.PopulateLevelRequirementData(Path.GetFileNameWithoutExtension(path), temp);
+                }
+            } catch (Exception ex) {
+                Debug.LogError($"Failed to load and parse level file:\n{ex}");
+            }
+        }
+
+        private void PopulateLevelRequirementData(string filename, LevelRequirementData levelRequirementData) {
+            levelRequirementName = filename;
+            this.levelRequirementData = levelRequirementData;
+            atomicObjectRequests = levelRequirementData.atomicObjectRequests.ToList();
+            atomicObjectSOs = new();
+            foreach (var atomicObjectRequest in atomicObjectRequests) {
+                AtomicObjectSO atomicObjectSO = null;
+                DataHandler.TryLoadSO(atomicObjectRequest.atomicObjectSOPath, out atomicObjectSO);
+                atomicObjectSOs.Add(atomicObjectSO);
+            }
+
+            Repaint();
         }
 
         private void SaveLevelFile() {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(levelRequirementName)) {
+                Debug.LogWarning("Level Requirement Name is required.");
+                return;
+            }
+
+            string fullPath = Utilities.GetUnityRelativeAssetPath(Utilities.GetDataPath(Utilities.DIR_LEVEL_REQUIREMENT_DATA, levelRequirementName + ".lz4"));
+            levelRequirementData.levelRequirementName = Path.GetFileNameWithoutExtension(fullPath);
+            
+
+            if (DataHandler.TrySaveToFile(levelRequirementData, fullPath))
+                Close();
         }
 
-        private void LoadAvailableEventTypes() {
+        private static void LoadAvailableEventTypes() {
             availableEventTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(a => a.GetTypes())
-                .Where(t => !t.IsAbstract && typeof(GameEventMessage).IsAssignableFrom(t))
+                .Where(t => !t.IsAbstract && typeof(GameEventMessage).IsAssignableFrom(t) && t != typeof(GameEventMessage) && t != typeof(AtomicObjectRequestUnlockMessage))
                 .ToArray();
         }
 
-        private GenericMenu LoadGameEventMessages(List<GameEventMessage> allEvents, int atomicIndex) {
+        private GenericMenu LoadGameEventMessages(List<MessageEditor> allEvents, int atomicIndex) {
             GenericMenu menu = new GenericMenu();
-            for (int i = 0; i < availableEventTypes.Length; i++)  {
+            for (int i = 0; i < availableEventTypes.Length; i++) {
                 var eventType = availableEventTypes[i];
                 var data = (atomicIndex, allEvents, eventType);
                 menu.AddItem(new GUIContent(eventType.Name), false, AddNewGameEventMessage, data);
@@ -235,15 +292,19 @@ namespace AtomicKitchenChaos.Editor
         }
 
         private void AddNewGameEventMessage(object userData) {
-            var (atomicIndex, allEvents, messageType) = ((int, List<GameEventMessage>, Type))userData;
+            var (atomicIndex, allEvents, messageType) = ((int, List<MessageEditor>, Type))userData;
 
-            GameEventMessage newEvent = CreateInstance(messageType) as GameEventMessage;
-            newEvent.name = messageType.Name;
+            if (MessageMapper.ATOMIC_OBJECT_REQUEST_UNLOCK_MAPPER.TryGetValue(messageType, out Type editorType)) {
+                var gameEventMessage = (GameEventMessage)Activator.CreateInstance(messageType);
+                var newEvent = (MessageEditor)Activator.CreateInstance(editorType, gameEventMessage);
 
-            allEvents.Add(newEvent);
+                allEvents.Add(newEvent);
+            } else {
+                Debug.LogError($"Unable to get type in mapper {messageType.GetType()}.");
+            }
 
             var request = atomicObjectRequests[atomicIndex];
-            request.unlockMessage.unlockRequirements = allEvents.ToArray();
+            request.unlockMessages = allEvents.Select(t => t.Message).ToArray();
             atomicObjectRequests[atomicIndex] = request;
 
             Repaint();

@@ -1,7 +1,10 @@
 {
     "name": "AtomicKitchenChaos.Data",
     "rootNamespace": "AtomicKitchenChaos.Data",
-    "references": [],
+    "references": [
+        "GUID:324b279cec89de9498a03c8995143e70",
+        "GUID:84e0a5921ca295645b17b252e63e089d"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

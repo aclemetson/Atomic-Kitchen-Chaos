@@ -1,11 +1,14 @@
 using System;
-using UnityEngine;
 
 namespace AtomicKitchenChaos.Messages {
-    public abstract class GameEventMessage : ScriptableObject {
+
+    [Serializable]
+    public class GameEventMessage {
         public string displayName;
 
-        public abstract void EditorDrawingFunction();
+        public virtual void SubscriptionCheck(GameEventMessage payload) {
+            throw new NotImplementedException();
+        }
     }
 
 }

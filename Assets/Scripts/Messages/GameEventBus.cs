@@ -1,6 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using UnityEngine.Events;
 
 namespace AtomicKitchenChaos.Messages
 {
@@ -30,6 +34,27 @@ namespace AtomicKitchenChaos.Messages
                     callback.Invoke(message);
                 }
             }
+        }
+
+        public static void AssignGenericUnlockSubscription(AtomicObjectRequestUnlockMessage atomicUnlockMessage, UnityAction action) {
+            atomicUnlockMessage.AddUnlockAction(action);
+
+            var messageType = atomicUnlockMessage.GetType();
+            var subscribeMethod = typeof(GameEventBus)
+                .GetMethods(BindingFlags.Public | BindingFlags.Static)
+                .First(m => m.Name == "Subscribe" && m.GetParameters().Length == 1)
+                .MakeGenericMethod(messageType);
+
+            var actionType = typeof(Action<>).MakeGenericType(messageType);
+            var parameter = Expression.Parameter(messageType, "msg");
+
+            var methodInfo = messageType.GetMethod("SubscriptionCheck", new[] { typeof(GameEventMessage) });
+            var castedParameter = Expression.Convert(parameter, typeof(GameEventMessage));
+            var call = Expression.Call(Expression.Constant(atomicUnlockMessage), methodInfo, castedParameter);
+            var lambda = Expression.Lambda(actionType, call, parameter);
+            var compiledDelegate = lambda.Compile();
+
+            subscribeMethod.Invoke(null, new object[] { compiledDelegate });
         }
     }
 }

@@ -1,5 +1,8 @@
 using AtomicKitchenChaos.Counters;
+using AtomicKitchenChaos.Counters.Misc;
+using AtomicKitchenChaos.Data;
 using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
+using AtomicKitchenChaos.Utility;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,11 +11,12 @@ namespace AtomicKitchenChaos.Level
     public class LevelManager : MonoBehaviour
     {
         [SerializeField] private LockedCounter lockedCounterPrefab;
-        [SerializeField] private string levelName;
+        [SerializeField] private string levelPath;
 
-
+        private LevelRequirementData levelRequirementData;
         private void Start() {
-            LevelData levelData = LevelLoader.LoadLevel(levelName);
+            DataHandler.TryLoadFromFile(levelPath, out LevelData levelData);
+            DataHandler.TryLoadFromFile(levelData.levelRequirementPath, out levelRequirementData);
 
             foreach(var c in levelData.Counters) {
                 LoadCounter(c);
@@ -26,6 +30,13 @@ namespace AtomicKitchenChaos.Level
                 return;
             }
 
+            // For the submission counters, give the level requirement data
+            if (counterSO.GetType() == typeof(SubmissionCounterSO)) {
+                SubmissionCounterSO temp = (SubmissionCounterSO)counterSO;
+                temp.levelRequirementData = levelRequirementData;
+                counterSO = temp;
+            }
+
             Vector3 position = counter.position.ToVector3();
             Counter counterObject;
             if (counter.isActive) {
@@ -33,6 +44,8 @@ namespace AtomicKitchenChaos.Level
                 counterObject.SetCounterSO(counterSO);
             } else {
                 counterObject = Instantiate(lockedCounterPrefab);
+                LockedCounter temp = (LockedCounter)counterObject;
+                temp.SetLockedCounter(counterSO, counter.purchasePrice);
             }
             counterObject.transform.position = position;
         }

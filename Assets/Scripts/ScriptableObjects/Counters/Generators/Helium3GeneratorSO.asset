@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e3ba3f23c540f3499fe66bcb2877ece, type: 3}
   m_Name: Helium3GeneratorSO
   m_EditorClassIdentifier: 
-  counterPrefabPath: Assets/Prefabs/Counters/Generators/Generator.prefab
+  displayName: Helium3 Generator
   material: {fileID: 2100000, guid: 61f2237f278f7cf4cb6d0256f8846869, type: 2}
+  counterPrefabPath: Assets/Prefabs/Counters/Generators/Generator.prefab
   atomicObjectSO: {fileID: 11400000, guid: 5dec9332c8a3eb849b9c74a6780c09cf, type: 2}

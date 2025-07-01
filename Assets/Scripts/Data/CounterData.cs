@@ -1,7 +1,6 @@
-using AtomicKitchenChaos.Data;
 using System;
 
-namespace AtomicKitchenChaos.Level
+namespace AtomicKitchenChaos.Data
 {
     [Serializable]
     public struct CounterData

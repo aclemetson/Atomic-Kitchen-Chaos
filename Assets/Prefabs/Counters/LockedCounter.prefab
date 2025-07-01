@@ -272,6 +272,37 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &5724880531796333795
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2282565670446984220}
+  m_Layer: 0
+  m_Name: CounterSpawnLocation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2282565670446984220
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5724880531796333795}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3090779926956275897}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7107314001624121054
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,7 +691,11 @@ PrefabInstance:
     - {fileID: 28442160013378620, guid: b048180071e2715428de2aac459856de, type: 3}
     m_RemovedGameObjects:
     - {fileID: 706284981684955955, guid: b048180071e2715428de2aac459856de, type: 3}
+    - {fileID: 4892282734610318510, guid: b048180071e2715428de2aac459856de, type: 3}
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
+      insertIndex: 0
+      addedObject: {fileID: 2282565670446984220}
     - targetCorrespondingSourceObject: {fileID: 5325393457123579857, guid: b048180071e2715428de2aac459856de, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7484568907257871657}
@@ -687,7 +722,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unlockPrice: 0
-  counterSpawnLocation: {fileID: 0}
+  counterSpawnLocation: {fileID: 2282565670446984220}
+  unlockPanelUI: {fileID: 9215704599615650267}
+--- !u!4 &3090779926956275897 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6123228058369013899, guid: b048180071e2715428de2aac459856de, type: 3}
+  m_PrefabInstance: {fileID: 9087899619402760242}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &4033305173309954019 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5325393457123579857, guid: b048180071e2715428de2aac459856de, type: 3}

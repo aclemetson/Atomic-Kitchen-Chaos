@@ -1,10 +1,13 @@
 
-namespace AtomicKitchenChaos.Level
+using System;
+
+namespace AtomicKitchenChaos.Data
 {
+    [Serializable]
     public struct LevelData 
     {
         public string LevelName;
         public CounterData[] Counters;
-        public string levelRequirementSOPath;
+        public string levelRequirementPath;
     }
 }

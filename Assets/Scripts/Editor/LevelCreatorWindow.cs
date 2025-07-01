@@ -2,12 +2,9 @@ using AtomicKitchenChaos.Data;
 using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using AtomicKitchenChaos.Level;
 using AtomicKitchenChaos.Utility;
-using K4os.Compression.LZ4;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -16,7 +13,8 @@ namespace AtomicKitchenChaos.Editor
     public class LevelCreatorWindow : EditorWindow
     {
         private string levelName = "NewLevel";
-        private LevelRequirementSO levelRequirementSO;
+        private LevelRequirementData levelRequirementData;
+        private string levelRequirementDataPath = "";
         private Vector2 scrollPos;
         private List<CounterEntry> counterEntries = new();
         private int tileHeight = 100;
@@ -61,8 +59,29 @@ namespace AtomicKitchenChaos.Editor
             levelName = EditorGUILayout.TextField("Level Name", levelName);
 
             // Recipt List SO
-            EditorGUILayout.LabelField("Recipe List", EditorStyles.label);
-            levelRequirementSO = (LevelRequirementSO)EditorGUILayout.ObjectField(levelRequirementSO, typeof(LevelRequirementSO), false);
+            EditorGUILayout.LabelField("Level Requirement Data", EditorStyles.label);
+
+            GUILayout.BeginHorizontal();
+
+            string assetName = string.IsNullOrEmpty(levelRequirementData.levelRequirementName) ? "None Selected" : levelRequirementData.levelRequirementName;
+            EditorGUILayout.LabelField(assetName, GUILayout.MaxWidth(200));
+
+            if (GUILayout.Button("Browse", GUILayout.Width(80))) {
+                string selectedPath = EditorUtility.OpenFilePanel(
+                    "Select Level Requirement Asset",
+                    Utilities.DIR_LEVEL_REQUIREMENT_DATA,
+                    "lz4"
+                    );
+                if (!string.IsNullOrEmpty(selectedPath)) {
+                    // Convert full path to relative project path
+                    levelRequirementDataPath = Utilities.GetUnityRelativeAssetPath(selectedPath);
+                    if (!DataHandler.TryLoadFromFile(levelRequirementDataPath, out levelRequirementData)) {
+                        Debug.LogError("Selected file is not valid");
+                    }
+                }
+            }
+
+            GUILayout.EndHorizontal();
 
             // Small space before grid header
             GUILayout.Space(10);
@@ -163,7 +182,7 @@ namespace AtomicKitchenChaos.Editor
 
             var levelData = new LevelData {
                 LevelName = levelName,
-                levelRequirementSOPath = AssetDatabase.GetAssetPath(levelRequirementSO),
+                levelRequirementPath = levelRequirementDataPath,
                 Counters = counterEntries.Select(c => new CounterData {
                     position = new CompressableStructs.CompressableVector3(c.position),
                     counterSOpath = AssetDatabase.GetAssetPath(c.counterSO),
@@ -172,45 +191,10 @@ namespace AtomicKitchenChaos.Editor
                 }).ToArray()
             };
 
-            // Serialize to JSON
-            string json = JsonUtility.ToJson(levelData, true);
-            byte[] raw = Encoding.UTF8.GetBytes(json);
-            int maxCompressedSize = LZ4Codec.MaximumOutputSize(raw.Length);
-            byte[] compressed = new byte[maxCompressedSize];
-
-            int compressedLength = LZ4Codec.Encode(raw, 0, raw.Length, compressed, 0, compressed.Length);
-            Array.Resize(ref compressed, compressedLength);
-
-            // Make sure it is less than the MAX FILE SIZE before saving
-            if (compressedLength > Utilities.MAX_LEVEL_FILE_SIZE) {
-                EditorUtility.DisplayDialog(
-                    "File Too Large",
-                    $"Level file is too large ({compressedLength / (1024 * 1024f):F2} MB). Max allowed is {Utilities.MAX_LEVEL_FILE_SIZE / (1024 * 1024):F2} MB.",
-                    "OK"
-                );
-                return;
-            }
-
-            // Save to Resources folder
             string fullPath = Utilities.GetDataPath(Utilities.DIR_LEVEL_DATA, levelName + ".lz4");
 
-            // Check if file exists
-            if (File.Exists(fullPath)) {
-                bool overwrite = EditorUtility.DisplayDialog(
-                    "File Already Exists",
-                    $"A level file named '{levelName}' laready exists.\nDo you want to overwrite it?",
-                    "Yes", "No"
-                );
-
-                if (!overwrite) return;
-            }
-
-            // Save file
-            File.WriteAllBytes(fullPath, compressed);
-            AssetDatabase.Refresh();
-
-            Debug.Log($"Saved level to: {fullPath}");
-            Close();
+            if(DataHandler.TrySaveToFile(levelData, fullPath))
+                Close();
         }
 
         private static void LoadLevelFromDisk() {
@@ -219,7 +203,7 @@ namespace AtomicKitchenChaos.Editor
             if (string.IsNullOrEmpty(path)) return;
 
             try {
-                LevelData levelData = LevelLoader.LoadLevel(path, isFullPath: true);
+                DataHandler.TryLoadFromFile(path, out LevelData levelData);
                 LevelCreatorWindow window = GetWindow<LevelCreatorWindow>("Level Creator");
                 window.PopulateLevelData(levelData);
             } catch (Exception ex) {
@@ -230,7 +214,12 @@ namespace AtomicKitchenChaos.Editor
         private void PopulateLevelData(LevelData data) {
             levelName = data.LevelName;
 
-            levelRequirementSO = AssetDatabase.LoadAssetAtPath<LevelRequirementSO>(data.levelRequirementSOPath);
+            if(!DataHandler.TryLoadFromFile(data.levelRequirementPath, out levelRequirementData)) {
+                Debug.LogError("Unable to load Level Requirement Data");
+            }
+
+            levelRequirementDataPath = data.levelRequirementPath;
+
             counterEntries = data.Counters.Select(c => new CounterEntry {
                 position = c.position.ToVector3(),
                 counterSO = AssetDatabase.LoadAssetAtPath<CounterSO>(c.counterSOpath),
