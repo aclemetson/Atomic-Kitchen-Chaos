@@ -27,8 +27,6 @@ namespace AtomicKitchenChaos.Counters.Combiners {
             foreach (var item in holdPositions) {
                 ClearLabel(item.atomLabelContainerUI);
             }
-
-            CustomizeVisual();
         }
 
         protected override void Interact() {
@@ -50,8 +48,8 @@ namespace AtomicKitchenChaos.Counters.Combiners {
                     if (atomPrefab != null) {
                         var t = holdPositions[i].transform;
                         var go = Instantiate(atomPrefab, t);
-                        SetAtomicObject(go, result);
-                        SetLabel(go.atomicObjectSO, holdPositions[i].atomLabelContainerUI);
+                        go.SetAtomicObjectSO(result);
+                        SetLabel(result, holdPositions[i].atomLabelContainerUI);
                     }
                 }
                 ExoticMaterialManager.Instance.HandleExoticMatter(currentRecipe.GetExoticMaterialCounts());
@@ -63,7 +61,7 @@ namespace AtomicKitchenChaos.Counters.Combiners {
 
         protected override void StartWork() {
             if (playerManager.HasAtomicObject()) {
-                AtomicObjectSO playerObjectSO = playerManager.AtomicObject.atomicObjectSO;
+                AtomicObjectSO playerObjectSO = playerManager.AtomicObject.AtomicObjectSO;
                 if (recipeCounts.ContainsKey(playerObjectSO) && recipeCounts[playerObjectSO] > 0) {
                     recipeCounts[playerObjectSO]--;
                     playerManager.RemoveAtomicObject();

@@ -59,7 +59,7 @@ namespace AtomicKitchenChaos.Counters
                 }
 
                 if (closest != null) {
-                    AtomicObjectSO atomicObjectSO = playerManager.AtomicObject.atomicObjectSO;
+                    AtomicObjectSO atomicObjectSO = playerManager.AtomicObject.AtomicObjectSO;
                     playerManager.AtomicObject.transform.SetParent(closest, false);
                     playerManager.RemoveAtomicObject(false);
                     SetLabel(atomicObjectSO, atomLabelContainerUI);

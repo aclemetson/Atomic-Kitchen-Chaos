@@ -3,6 +3,14 @@ using UnityEngine;
 
 namespace AtomicKitchenChaos.GeneratedObjects.AtomicObjects {
     public class AtomicObject : MonoBehaviour {
-        public AtomicObjectSO atomicObjectSO;
+        private AtomicObjectSO atomicObjectSO;
+
+        public AtomicObjectSO AtomicObjectSO => atomicObjectSO;
+
+        public void SetAtomicObjectSO(AtomicObjectSO so) {
+            atomicObjectSO = so;
+            GetComponent<NucleusGenerator>().GenerateNucleus(atomicObjectSO.protons, atomicObjectSO.neutrons);
+            GetComponent<ElectronGenerator>().GenerateElectrons(atomicObjectSO.electrons);
+        }
     }
 }

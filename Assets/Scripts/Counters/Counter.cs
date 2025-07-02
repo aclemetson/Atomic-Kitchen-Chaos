@@ -20,6 +20,7 @@ namespace AtomicKitchenChaos.Counters {
 
         protected virtual void Start() {
             playerManager = PlayerManager.Instance;
+            CustomizeVisual();
         }
 
         private void OnTriggerEnter(Collider other) {
@@ -70,5 +71,11 @@ namespace AtomicKitchenChaos.Counters {
             public AtomLabelContainerUI atomLabelContainerUI;
         }
 
+        private void CustomizeVisual() {
+            var meshRenderer = GetComponentInChildren<MeshRenderer>();
+            if(meshRenderer) {
+                meshRenderer.material = counterSO.material;
+            }
+        }
     }
 }

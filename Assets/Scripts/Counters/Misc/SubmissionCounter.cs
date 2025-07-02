@@ -34,7 +34,7 @@ namespace AtomicKitchenChaos.Counters.Misc
 
         protected override void Interact() {
             if(playerManager.HasAtomicObject() && request != null && quantity > 0) {
-                if(playerManager.AtomicObject.atomicObjectSO == request) {
+                if(playerManager.AtomicObject.AtomicObjectSO == request) {
                     quantity--;
                     playerManager.RemoveAtomicObject();
                     ingredientContainerUI.SetQuantity(quantity);

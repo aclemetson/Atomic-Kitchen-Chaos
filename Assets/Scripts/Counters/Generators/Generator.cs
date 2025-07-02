@@ -16,9 +16,6 @@ namespace AtomicKitchenChaos.Counters.Generators {
                 ClearLabel(item.atomLabelContainerUI);
             }
 
-            // Customize the Visual
-            CustomizeVisual();
-
             // Start Generating
             StartWork();
             state = State.Working;
@@ -37,7 +34,7 @@ namespace AtomicKitchenChaos.Counters.Generators {
             state = State.Full;
             if (generatorSO.atomicObjectSO != null && atomPrefab != null) {
                 var go = Instantiate(atomPrefab, holdPositions[0].transform);
-                SetAtomicObject(go, generatorSO.atomicObjectSO);
+                go.SetAtomicObjectSO(generatorSO.atomicObjectSO);
                 SetLabel(generatorSO.atomicObjectSO, holdPositions[0].atomLabelContainerUI);
             }
             if (isNextTo) {

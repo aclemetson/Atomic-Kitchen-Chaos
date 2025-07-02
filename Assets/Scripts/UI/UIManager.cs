@@ -1,3 +1,4 @@
+using AtomicKitchenChaos.Data;
 using AtomicKitchenChaos.GeneratedObjects;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace AtomicKitchenChaos.UI {
         public static UIManager Instance;
 
         [SerializeField] private SettingsPopulatorUI settingsPopulatorUI;
+        [SerializeField] private StoragePanelPopulatorUI storagePanelUI;
         [SerializeField] private ExoticMaterialPanelUI exoticMaterialPanelUI;
         [SerializeField] private HUDUI hudUI;
 
@@ -21,6 +23,10 @@ namespace AtomicKitchenChaos.UI {
 
         public void PopulateSettingsMenu(string settingsText, List<ISettingsObject> list, UnityAction<int> action) {
             settingsPopulatorUI.PopulateSettingsMenu(settingsText, list, action);
+        }
+
+        public void PopulateStorageMenu(StorageData[] storageData, UnityAction<int> action) {
+            storagePanelUI.PopulateStorageMenu(storageData, action);
         }
 
         public void AddExoticMaterialUI(string material, int count) {

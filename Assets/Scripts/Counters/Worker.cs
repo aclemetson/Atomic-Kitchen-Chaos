@@ -18,9 +18,6 @@ namespace AtomicKitchenChaos.Counters
         [SerializeField] protected ProgressBarUI progressBar;
         [SerializeField] protected AtomicObject atomPrefab;
 
-        [Header("Visual Properties")]
-        [SerializeField] private GameObject visualObject;
-
         protected State state = State.Idle;
 
         protected override void Start() {
@@ -61,17 +58,5 @@ namespace AtomicKitchenChaos.Counters
             }
             return false;
         }
-
-        protected void SetAtomicObject(AtomicObject obj, AtomicObjectSO so) {
-            obj.GetComponent<NucleusGenerator>().GenerateNucleus(so.protons, so.neutrons);
-            obj.GetComponent<ElectronGenerator>().GenerateElectrons(so.electrons);
-            obj.atomicObjectSO = so;
-        }
-
-
-        protected void CustomizeVisual() {
-            visualObject.GetComponent<MeshRenderer>().material = counterSO.material;
-        }
-
     }
 }
