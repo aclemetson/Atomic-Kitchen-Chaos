@@ -24,3 +24,4 @@ MonoBehaviour:
   - exoticMaterial: {fileID: 11400000, guid: 8341f45e4600daa4fa3340c3c6a55414, type: 2}
     quantity: 1
   cookTime: 2
+  unlockCost: 75

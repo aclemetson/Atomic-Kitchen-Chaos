@@ -18,15 +18,7 @@ namespace AtomicKitchenChaos.Counters
         }
 
         protected override void Interact() {
-            if(GameManager.Instance.QuarkCount >= unlockPrice) {
-                Counter prefab = AssetDatabase.LoadAssetAtPath<Counter>(counterSO.counterPrefabPath);
-
-                if (prefab != null) {
-                    UnlockCounter(prefab);
-                } else {
-                    Debug.LogError($"Unable to load asset located in {counterSO.counterPrefabPath}");
-                }
-            }
+            GameEventBus.Publish(new TryUnlockMessage() { unlockPrice = unlockPrice, callback = UnlockCounter });
         }
 
         protected override void SettingsInteraction() {
@@ -39,12 +31,18 @@ namespace AtomicKitchenChaos.Counters
             unlockPanelUI.SetUnlockPanel(counterSO.displayName, unlockPrice);
         }
 
-        private void UnlockCounter(Counter prefab) {
+        private void UnlockCounter() {
+            Counter prefab = AssetDatabase.LoadAssetAtPath<Counter>(counterSO.counterPrefabPath);
+
+            if (prefab == null) {
+                Debug.LogError($"Unable to load asset located in {counterSO.counterPrefabPath}");
+                return;
+            }
+
             var go = Instantiate(prefab);
             go.SetCounterSO(counterSO);
             go.transform.SetParent(null);
             go.transform.position = counterSpawnLocation.position;
-            GameEventBus.Publish(new UpdateQuarkMessage() { changeInQuarks = -unlockPrice });
             GameEventBus.Publish(new CounterUnlockMessage() { counterSOPath = AssetDatabase.GetAssetPath(counterSO) });
             Destroy(gameObject);
         }

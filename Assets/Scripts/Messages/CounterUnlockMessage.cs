@@ -10,9 +10,7 @@ namespace AtomicKitchenChaos.Messages
         public override void SubscriptionCheck(GameEventMessage payload) {
             CounterUnlockMessage temp = (CounterUnlockMessage)payload;
             if(temp.counterSOPath == counterSOPath) {
-                unlockEvent.Invoke();
-                unlockEvent.RemoveAllListeners();
-                GameEventBus.Unsubscribe<CounterUnlockMessage>(SubscriptionCheck);
+                Trigger();
             }
         }
     }

@@ -1,6 +1,5 @@
 using AtomicKitchenChaos.Data;
 using AtomicKitchenChaos.Editor.MessageMappers;
-using AtomicKitchenChaos.GeneratedObjects.AtomicObjects;
 using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using AtomicKitchenChaos.Messages;
 using AtomicKitchenChaos.Utility;
@@ -14,7 +13,9 @@ using UnityEngine;
 namespace AtomicKitchenChaos.Editor {
     public class LevelRequirementsCreatorWindow : EditorWindow {
         private string levelRequirementName = "NewLevelRequirement";
+        private string gameOutcomeDataPath = "";
         private LevelRequirementData levelRequirementData;
+        private GameOutcomeData gameOutcomeData;
         private List<LevelRequirementData.AtomicObjectRequest> atomicObjectRequests;
         private List<AtomicObjectSO> atomicObjectSOs;
         private Vector2 scrollPos;
@@ -37,13 +38,12 @@ namespace AtomicKitchenChaos.Editor {
                 mainDisplay.height - 4 * margin
             );
 
-            LoadAvailableEventTypes();
+            availableEventTypes = MessageMapper.ATOMIC_OBJECT_REQUEST_UNLOCK_MAPPER.Keys.ToArray();
             window.Show();
         }
 
         [MenuItem("Tools/Level Tools/Edit Existing Level Requirements", priority = 21)]
         public static void EditExistingLevelRequirements() {
-            LoadAvailableEventTypes();
             LoadLevelRequirementsFromDisk();
         }
 
@@ -69,9 +69,31 @@ namespace AtomicKitchenChaos.Editor {
             GUILayout.Label("Level Requirements Information", EditorStyles.boldLabel);
 
             levelRequirementName = EditorGUILayout.TextField("Level Requirement Name", levelRequirementName);
+            GUILayout.BeginHorizontal();
 
-            // End Level Completion Task (right now it's a quark amount, will be a message or set of messages
-            levelRequirementData.levelCompletionTask = EditorGUILayout.LongField("Level Completion Task", levelRequirementData.levelCompletionTask);
+            string assetName = string.IsNullOrEmpty(levelRequirementData.gameOutcomePath) ? "None Selected" : Path.GetFileNameWithoutExtension(levelRequirementData.gameOutcomePath);
+            EditorGUILayout.LabelField(assetName, GUILayout.MaxWidth(200));
+
+            // Get Game Outcomes by file
+            EditorGUILayout.LabelField("Game Outcome Data", EditorStyles.label);
+
+            if (GUILayout.Button("Browse", GUILayout.Width(80))) {
+                string selectedPath = EditorUtility.OpenFilePanel(
+                    "Select Game Outcome Asset",
+                    Utilities.DIR_GAME_OUTCOME_DATA,
+                    "lz4"
+                    );
+                if (!string.IsNullOrEmpty(selectedPath)) {
+                    // Convert full path to relative project path
+                    gameOutcomeDataPath = Utilities.GetUnityRelativeAssetPath(selectedPath);
+                    if (!DataHandler.TryLoadFromFile(gameOutcomeDataPath, out gameOutcomeData)) {
+                        Debug.LogError("Selected file is not valid");
+                    }
+                    levelRequirementData.gameOutcomePath = gameOutcomeDataPath;
+                }
+            }
+
+            GUILayout.EndHorizontal();
 
             // Small space before grid header
             GUILayout.Space(10);
@@ -251,12 +273,17 @@ namespace AtomicKitchenChaos.Editor {
             this.levelRequirementData = levelRequirementData;
             atomicObjectRequests = levelRequirementData.atomicObjectRequests.ToList();
             atomicObjectSOs = new();
+            gameOutcomeDataPath = levelRequirementData.gameOutcomePath;
+            if(!string.IsNullOrEmpty(gameOutcomeDataPath)) 
+                DataHandler.TryLoadFromFile(gameOutcomeDataPath, out gameOutcomeData);
+
             foreach (var atomicObjectRequest in atomicObjectRequests) {
                 AtomicObjectSO atomicObjectSO = null;
                 DataHandler.TryLoadSO(atomicObjectRequest.atomicObjectSOPath, out atomicObjectSO);
                 atomicObjectSOs.Add(atomicObjectSO);
             }
 
+            availableEventTypes = MessageMapper.ATOMIC_OBJECT_REQUEST_UNLOCK_MAPPER.Keys.ToArray();
             Repaint();
         }
 
@@ -268,17 +295,10 @@ namespace AtomicKitchenChaos.Editor {
 
             string fullPath = Utilities.GetUnityRelativeAssetPath(Utilities.GetDataPath(Utilities.DIR_LEVEL_REQUIREMENT_DATA, levelRequirementName + ".lz4"));
             levelRequirementData.levelRequirementName = Path.GetFileNameWithoutExtension(fullPath);
-            
+            levelRequirementData.gameOutcomePath = gameOutcomeDataPath;
 
             if (DataHandler.TrySaveToFile(levelRequirementData, fullPath))
                 Close();
-        }
-
-        private static void LoadAvailableEventTypes() {
-            availableEventTypes = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .Where(t => !t.IsAbstract && typeof(GameEventMessage).IsAssignableFrom(t) && t != typeof(GameEventMessage) && t != typeof(AtomicObjectRequestUnlockMessage))
-                .ToArray();
         }
 
         private GenericMenu LoadGameEventMessages(List<MessageEditor> allEvents, int atomicIndex) {

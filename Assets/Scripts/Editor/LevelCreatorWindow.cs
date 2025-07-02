@@ -1,6 +1,5 @@
 using AtomicKitchenChaos.Data;
 using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
-using AtomicKitchenChaos.Level;
 using AtomicKitchenChaos.Utility;
 using System;
 using System.Collections.Generic;
@@ -58,7 +57,7 @@ namespace AtomicKitchenChaos.Editor
             // Level Name Field
             levelName = EditorGUILayout.TextField("Level Name", levelName);
 
-            // Recipt List SO
+            // Level Requirement Data
             EditorGUILayout.LabelField("Level Requirement Data", EditorStyles.label);
 
             GUILayout.BeginHorizontal();

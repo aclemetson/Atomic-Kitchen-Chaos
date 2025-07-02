@@ -32,7 +32,7 @@ namespace AtomicKitchenChaos.UI {
 
             for (int i = 0; i < list.Count; i++) {
                 var go = Instantiate(containerPrefab, gridContainer);
-                go.SetLabel(list[i].DisplayName);
+                go.SetData(list[i], i == 0);
                 int temp = i;
                 go.AddButtonAction(() => {
                     selectedObject = temp;

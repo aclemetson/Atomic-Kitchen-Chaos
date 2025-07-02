@@ -22,6 +22,7 @@ namespace AtomicKitchenChaos.Utility
         public static readonly int MAX_LEVEL_FILE_SIZE = 10 * 1024 * 1024;
         public static readonly string DIR_LEVEL_DATA = "Resources/Levels";
         public static readonly string DIR_LEVEL_REQUIREMENT_DATA = "Resources/LevelRequirements";
+        public static readonly string DIR_GAME_OUTCOME_DATA = "Resources/GameOutcomes";
 
         public static string GetDataPath(string dataPath, string fileName="") {
             string fullPath = Path.Combine(Application.dataPath, dataPath);

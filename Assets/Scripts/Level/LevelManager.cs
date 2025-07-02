@@ -2,6 +2,7 @@ using AtomicKitchenChaos.Counters;
 using AtomicKitchenChaos.Counters.Misc;
 using AtomicKitchenChaos.Data;
 using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
+using AtomicKitchenChaos.Messages;
 using AtomicKitchenChaos.Utility;
 using UnityEditor;
 using UnityEngine;
@@ -14,12 +15,19 @@ namespace AtomicKitchenChaos.Level
         [SerializeField] private string levelPath;
 
         private LevelRequirementData levelRequirementData;
+        private GameOutcomeData gameOutcomeData;
         private void Start() {
             DataHandler.TryLoadFromFile(levelPath, out LevelData levelData);
             DataHandler.TryLoadFromFile(levelData.levelRequirementPath, out levelRequirementData);
+            DataHandler.TryLoadFromFile(levelRequirementData.gameOutcomePath, out gameOutcomeData);
 
             foreach(var c in levelData.Counters) {
                 LoadCounter(c);
+            }
+
+            foreach (var gameOutcome in gameOutcomeData.gameOutcomes) {
+                UnlockMessage temp = (UnlockMessage)gameOutcome.message;
+                GameEventBus.AssignGenericUnlockSubscription(temp, UpdateGameState);
             }
         }
 
@@ -48,6 +56,10 @@ namespace AtomicKitchenChaos.Level
                 temp.SetLockedCounter(counterSO, counter.purchasePrice);
             }
             counterObject.transform.position = position;
+        }
+
+        private void UpdateGameState() {
+            Debug.Log("Game State is Successfully Updated");
         }
     }
 }

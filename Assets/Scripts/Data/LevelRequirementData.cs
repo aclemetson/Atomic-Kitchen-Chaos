@@ -3,10 +3,11 @@ using System;
 
 namespace AtomicKitchenChaos.Data
 {
+    [Serializable]
     public struct LevelRequirementData {
         public string levelRequirementName;
         public AtomicObjectRequest[] atomicObjectRequests;
-        public long levelCompletionTask;
+        public string gameOutcomePath;
 
         [Serializable]
         public struct AtomicObjectRequest {

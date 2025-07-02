@@ -36,10 +36,10 @@ namespace AtomicKitchenChaos.Messages
             }
         }
 
-        public static void AssignGenericUnlockSubscription(AtomicObjectRequestUnlockMessage atomicUnlockMessage, UnityAction action) {
-            atomicUnlockMessage.AddUnlockAction(action);
+        public static void AssignGenericUnlockSubscription(UnlockMessage unlockMessage, UnityAction action) {
+            unlockMessage.AddUnlockAction(action);
 
-            var messageType = atomicUnlockMessage.GetType();
+            var messageType = unlockMessage.GetType();
             var subscribeMethod = typeof(GameEventBus)
                 .GetMethods(BindingFlags.Public | BindingFlags.Static)
                 .First(m => m.Name == "Subscribe" && m.GetParameters().Length == 1)
@@ -50,7 +50,7 @@ namespace AtomicKitchenChaos.Messages
 
             var methodInfo = messageType.GetMethod("SubscriptionCheck", new[] { typeof(GameEventMessage) });
             var castedParameter = Expression.Convert(parameter, typeof(GameEventMessage));
-            var call = Expression.Call(Expression.Constant(atomicUnlockMessage), methodInfo, castedParameter);
+            var call = Expression.Call(Expression.Constant(unlockMessage), methodInfo, castedParameter);
             var lambda = Expression.Lambda(actionType, call, parameter);
             var compiledDelegate = lambda.Compile();
 

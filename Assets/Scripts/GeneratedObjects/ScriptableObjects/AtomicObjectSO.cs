@@ -6,7 +6,7 @@ namespace AtomicKitchenChaos.GeneratedObjects.ScriptableObjects {
     [CreateAssetMenu(menuName = "Generated Objects/AtomicObjectSO")]
     [RequireComponent(typeof(NucleusGenerator))]
     [RequireComponent(typeof(ElectronGenerator))]
-    public class AtomicObjectSO : ScriptableObject, ISettingsObject {
+    public class AtomicObjectSO : ScriptableObject {
         public string displayName;
         public string atomicSymbol;
         public int protons;

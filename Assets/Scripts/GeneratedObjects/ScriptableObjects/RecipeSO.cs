@@ -1,6 +1,8 @@
+using AtomicKitchenChaos.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace AtomicKitchenChaos.GeneratedObjects.ScriptableObjects {
@@ -12,8 +14,17 @@ namespace AtomicKitchenChaos.GeneratedObjects.ScriptableObjects {
         public AtomicObjectSO[] results;
         public ExoticMaterialCount[] exoticMaterialCounts;
         public float cookTime;
+        public long unlockCost;
+        private bool isLocked;
 
         public string DisplayName => displayName;
+        public long UnlockCost => unlockCost;
+
+        public bool IsLocked => isLocked;
+
+        private void OnEnable() {
+            isLocked = true;
+        }
 
         [Serializable]
         public struct MaterialCount {
@@ -43,6 +54,9 @@ namespace AtomicKitchenChaos.GeneratedObjects.ScriptableObjects {
             return results;
         }
 
-
+        public void UnlockObject() {
+            isLocked = false;
+            GameEventBus.Publish(new RecipeUnlockMessage() { recipeSOPath = AssetDatabase.GetAssetPath(this) });
+        }
     }
 }
