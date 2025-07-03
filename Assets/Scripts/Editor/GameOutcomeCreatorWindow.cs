@@ -10,39 +10,27 @@ using UnityEditor;
 using UnityEngine;
 
 namespace AtomicKitchenChaos.Editor {
-    public class GameOutcomeCreatorWindow : EditorWindow {
+    public class GameOutcomeCreatorWindow : CreatorWindow<GameOutcomeData> {
+
+        private static readonly string WINDOW_NAME = "Game Outcomes Creator";
 
         private string gameOutcomeName = "NewGameOutcome";
         private GameOutcomeData gameOutcomeData;
         private List<GameOutcomeData.GameOutcome> gameOutcomes;
         private List<Type> messageTypes;
-        private Vector2 scrollPos;
-        private int tileHeight = 100;
 
         private static Type[] availableEventTypes;
 
         [MenuItem("Tools/Level Tools/Game Outcomes Creator", priority = 40)]
         public static void ShowFullscreenWindow() {
-            var window = GetWindow<GameOutcomeCreatorWindow>();
-            window.titleContent = new GUIContent("Game Outcomes Creator");
-
-            Rect mainDisplay = UnityEditorInternal.InternalEditorUtility.GetBoundsOfDesktopAtPoint(Vector2.zero);
-            float margin = 40f;
-
-            window.position = new Rect(
-                mainDisplay.x + margin,
-                mainDisplay.y + margin,
-                mainDisplay.width - 2 * margin,
-                mainDisplay.height - 4 * margin
-            );
-
+            getWindowCallback = () => GetWindow<GameOutcomeCreatorWindow>(WINDOW_NAME);
             availableEventTypes = MessageMapper.GAME_OUTCOME_UNLOCK_MAPPER.Keys.ToArray();
-            window.Show();
+            ShowFullscreenWindow(WINDOW_NAME);
         }
 
         [MenuItem("Tools/Level Tools/Edit Existing Game Outcomes", priority = 41)]
         public static void EditExistingGameOutcomes() {
-            LoadGameOutcomesFromDisk();
+            EditExistingObject(Utilities.DIR_GAME_OUTCOME_DATA, WINDOW_NAME);
         }
 
         private void OnGUI() {
@@ -99,12 +87,12 @@ namespace AtomicKitchenChaos.Editor {
 
             GUILayout.Space(20);
             if (GUILayout.Button("Save Level File")) {
-                SaveGameOutcomeFile();
+                SaveObject();
             }
 
             GUILayout.Space(20);
             if (GUILayout.Button("Load Another Level")) {
-                LoadGameOutcomesFromDisk();
+                LoadObjectFromDisk(Utilities.DIR_GAME_OUTCOME_DATA, WINDOW_NAME);
             }
 
             GUILayout.FlexibleSpace();
@@ -191,39 +179,22 @@ namespace AtomicKitchenChaos.Editor {
             EditorGUILayout.EndVertical();
 
             if (removeIndex >= 0) { gameOutcomes.RemoveAt(removeIndex); }
-            gameOutcomeData.gameOutcomes = gameOutcomes.ToArray(); ;
+            gameOutcomeData.gameOutcomes = gameOutcomes.ToArray();
         }
 
-        private void SaveGameOutcomeFile() {
+        protected override void SaveObject() {
             if (string.IsNullOrEmpty(gameOutcomeName)) {
                 Debug.LogWarning("Game Outcome Name is required.");
                 return;
             }
 
-            string fullPath = Utilities.GetUnityRelativeAssetPath(Utilities.GetDataPath(Utilities.DIR_GAME_OUTCOME_DATA, gameOutcomeName + ".lz4"));
-            gameOutcomeData.gameOutcomeName = Path.GetFileNameWithoutExtension(fullPath);
+            gameOutcomeData.gameOutcomeName = gameOutcomeName;
 
-            if (DataHandler.TrySaveToFile(gameOutcomeData, fullPath))
-                Close();
+            SaveObjectFile(Utilities.DIR_GAME_OUTCOME_DATA, gameOutcomeName, gameOutcomeData);
         }
 
-        private static void LoadGameOutcomesFromDisk() {
-            string path = EditorUtility.OpenFilePanel("Select Game Outcome File", Utilities.GetDataPath(Utilities.DIR_GAME_OUTCOME_DATA), "lz4");
-
-            if (string.IsNullOrEmpty(path)) return;
-
-            try {
-                if(DataHandler.TryLoadFromFile(path, out GameOutcomeData temp)) {
-                    GameOutcomeCreatorWindow window = GetWindow<GameOutcomeCreatorWindow>("Game Outcomes Creator");
-                    window.PopulateGameOutcomesData(Path.GetFileNameWithoutExtension(path), temp);
-                }
-            } catch (Exception ex) {
-                Debug.LogError($"Failed to load and parse game outcomes file:\n{ex}");
-            }
-        }
-
-        private void PopulateGameOutcomesData(string name, GameOutcomeData gameOutcomeData) {
-            gameOutcomeName = name;
+        protected override void PopulateEditorData(GameOutcomeData gameOutcomeData) {
+            gameOutcomeName = gameOutcomeData.gameOutcomeName;
             this.gameOutcomeData = gameOutcomeData;
             gameOutcomes = gameOutcomeData.gameOutcomes.ToList();
             messageTypes = gameOutcomes.Select(x => x.message.GetType()).ToList();

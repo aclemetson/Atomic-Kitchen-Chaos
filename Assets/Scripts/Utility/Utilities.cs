@@ -23,6 +23,8 @@ namespace AtomicKitchenChaos.Utility
         public static readonly string DIR_LEVEL_DATA = "Resources/Levels";
         public static readonly string DIR_LEVEL_REQUIREMENT_DATA = "Resources/LevelRequirements";
         public static readonly string DIR_GAME_OUTCOME_DATA = "Resources/GameOutcomes";
+        public static readonly string DIR_DIALOGUE_DATA = "Resources/Dialogues";
+        public static readonly string DIR_DIALOGUE_BUNDLE_DATA = "Resources/Dialogues/Bundles";
 
         public static string GetDataPath(string dataPath, string fileName="") {
             string fullPath = Path.Combine(Application.dataPath, dataPath);
@@ -34,12 +36,12 @@ namespace AtomicKitchenChaos.Utility
             return Path.Combine(Application.dataPath, dataPath, fileName);
         }
 
-        public static int GetNumLevels() {
-            return GetFullFilePaths().Length;
+        public static int GetNumLevels(string relativeDataPath) {
+            return GetFullFilePaths(relativeDataPath).Length;
         }
 
-        public static string[] GetFullFilePaths() {
-            string absolutePath = Path.Combine(Application.dataPath, DIR_LEVEL_DATA);
+        public static string[] GetFullFilePaths(string relativeDataPath) {
+            string absolutePath = Path.Combine(Application.dataPath, relativeDataPath);
             string extension = "*.lz4";
 
             if (Directory.Exists(absolutePath)) {

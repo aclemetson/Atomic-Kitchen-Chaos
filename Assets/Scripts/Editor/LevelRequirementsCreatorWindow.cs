@@ -11,40 +11,28 @@ using UnityEditor;
 using UnityEngine;
 
 namespace AtomicKitchenChaos.Editor {
-    public class LevelRequirementsCreatorWindow : EditorWindow {
+    public class LevelRequirementsCreatorWindow : CreatorWindow<LevelRequirementData> {
+        private static readonly string WINDOW_NAME = "Level Requirements Creator";
+
         private string levelRequirementName = "NewLevelRequirement";
         private string gameOutcomeDataPath = "";
         private LevelRequirementData levelRequirementData;
         private GameOutcomeData gameOutcomeData;
         private List<LevelRequirementData.AtomicObjectRequest> atomicObjectRequests;
         private List<AtomicObjectSO> atomicObjectSOs;
-        private Vector2 scrollPos;
-        private int tileHeight = 100;
 
         private static Type[] availableEventTypes;
 
         [MenuItem("Tools/Level Tools/Level Requirements Creator", priority = 20)]
         public static void ShowFullscreenWindow() {
-            var window = GetWindow<LevelRequirementsCreatorWindow>();
-            window.titleContent = new GUIContent("Level Requirements Creator");
-
-            Rect mainDisplay = UnityEditorInternal.InternalEditorUtility.GetBoundsOfDesktopAtPoint(Vector2.zero);
-            float margin = 40f;
-
-            window.position = new Rect(
-                mainDisplay.x + margin,
-                mainDisplay.y + margin,
-                mainDisplay.width - 2 * margin,
-                mainDisplay.height - 4 * margin
-            );
-
+            getWindowCallback = () => GetWindow<LevelRequirementsCreatorWindow>(WINDOW_NAME);
             availableEventTypes = MessageMapper.ATOMIC_OBJECT_REQUEST_UNLOCK_MAPPER.Keys.ToArray();
-            window.Show();
+            ShowFullscreenWindow(WINDOW_NAME);
         }
 
         [MenuItem("Tools/Level Tools/Edit Existing Level Requirements", priority = 21)]
         public static void EditExistingLevelRequirements() {
-            LoadLevelRequirementsFromDisk();
+            EditExistingObject(Utilities.DIR_LEVEL_REQUIREMENT_DATA, WINDOW_NAME);
         }
 
         private void OnGUI() {
@@ -127,12 +115,12 @@ namespace AtomicKitchenChaos.Editor {
 
             GUILayout.Space(20);
             if (GUILayout.Button("Save Level File")) {
-                SaveLevelFile();
+                SaveObject();
             }
 
             GUILayout.Space(20);
             if (GUILayout.Button("Load Another Level")) {
-                LoadLevelRequirementsFromDisk();
+                LoadObjectFromDisk(Utilities.DIR_LEVEL_REQUIREMENT_DATA, WINDOW_NAME);
             }
 
             GUILayout.FlexibleSpace();
@@ -253,23 +241,8 @@ namespace AtomicKitchenChaos.Editor {
             if (removeIndex >= 0) { atomicObjectRequests.RemoveAt(removeIndex); }
         }
 
-        private static void LoadLevelRequirementsFromDisk() {
-            string path = EditorUtility.OpenFilePanel("Select Level Requirement File", Utilities.GetDataPath(Utilities.DIR_LEVEL_REQUIREMENT_DATA), "lz4");
-
-            if (string.IsNullOrEmpty(path)) return;
-
-            try {
-                if (DataHandler.TryLoadFromFile(path, out LevelRequirementData temp)) {
-                    LevelRequirementsCreatorWindow window = GetWindow<LevelRequirementsCreatorWindow>("Level Requirements Creator");
-                    window.PopulateLevelRequirementData(Path.GetFileNameWithoutExtension(path), temp);
-                }
-            } catch (Exception ex) {
-                Debug.LogError($"Failed to load and parse level file:\n{ex}");
-            }
-        }
-
-        private void PopulateLevelRequirementData(string filename, LevelRequirementData levelRequirementData) {
-            levelRequirementName = filename;
+        protected override void PopulateEditorData(LevelRequirementData levelRequirementData) {
+            levelRequirementName = levelRequirementData.levelRequirementName;
             this.levelRequirementData = levelRequirementData;
             atomicObjectRequests = levelRequirementData.atomicObjectRequests.ToList();
             atomicObjectSOs = new();
@@ -287,18 +260,15 @@ namespace AtomicKitchenChaos.Editor {
             Repaint();
         }
 
-        private void SaveLevelFile() {
+        protected override void SaveObject() {
             if (string.IsNullOrEmpty(levelRequirementName)) {
                 Debug.LogWarning("Level Requirement Name is required.");
                 return;
             }
 
-            string fullPath = Utilities.GetUnityRelativeAssetPath(Utilities.GetDataPath(Utilities.DIR_LEVEL_REQUIREMENT_DATA, levelRequirementName + ".lz4"));
-            levelRequirementData.levelRequirementName = Path.GetFileNameWithoutExtension(fullPath);
-            levelRequirementData.gameOutcomePath = gameOutcomeDataPath;
+            levelRequirementData.levelRequirementName = levelRequirementName;
 
-            if (DataHandler.TrySaveToFile(levelRequirementData, fullPath))
-                Close();
+            SaveObjectFile(Utilities.DIR_LEVEL_REQUIREMENT_DATA, levelRequirementName, levelRequirementData);
         }
 
         private GenericMenu LoadGameEventMessages(List<MessageEditor> allEvents, int atomicIndex) {

@@ -10,5 +10,6 @@ namespace AtomicKitchenChaos.Data
         public int levelIndex;
         public CounterData[] Counters;
         public string levelRequirementPath;
+        public string dialogueBundlePath;
     }
 }

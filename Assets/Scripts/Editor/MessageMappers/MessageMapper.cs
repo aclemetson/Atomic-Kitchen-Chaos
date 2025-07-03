@@ -1,7 +1,6 @@
 using AtomicKitchenChaos.Messages;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace AtomicKitchenChaos.Editor.MessageMappers {
     public static class MessageMapper {
@@ -14,6 +13,13 @@ namespace AtomicKitchenChaos.Editor.MessageMappers {
 
         public static readonly Dictionary<Type, Type> GAME_OUTCOME_UNLOCK_MAPPER = new() {
             { typeof(NetWorthMessage), typeof(NetWorthMessageEditor) },
+        };
+
+        public static readonly Dictionary<Type, Type> DIALOGUE_TRIGGER_MAPPER = new() {
+            { typeof(NetWorthMessage), typeof(NetWorthMessageEditor) },
+            { typeof(CounterUnlockMessage), typeof(CounterUnlockMessageEditor) },
+            { typeof(RecipeUnlockMessage), typeof (RecipeUnlockMessageEditor) },
+            { typeof(AtomicObjectRequestSuccessMessage), typeof(AtomicObjectRequestSuccessMessageEditor) },
         };
     }
 }

@@ -3,52 +3,36 @@ using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using AtomicKitchenChaos.Utility;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace AtomicKitchenChaos.Editor
-{
-    public class LevelCreatorWindow : EditorWindow
-    {
+namespace AtomicKitchenChaos.Editor {
+    public class LevelCreatorWindow : CreatorWindow<LevelData> {
+        private static readonly string WINDOW_NAME = "Level Creator";
+
         private string levelName = "NewLevel";
         private LevelRequirementData levelRequirementData;
         private string levelRequirementDataPath = "";
-        private Vector2 scrollPos;
         private List<CounterEntry> counterEntries = new();
-        private int tileHeight = 100;
-        
+
         private static int levelIndex;
 
         [MenuItem("Tools/Level Tools/Level Creator", priority = 0)]
         public static void ShowFullscreenWindow() {
-            var window = GetWindow<LevelCreatorWindow>();
-            window.titleContent = new GUIContent("Level Creator");
-
-            Rect mainDisplay = UnityEditorInternal.InternalEditorUtility.GetBoundsOfDesktopAtPoint(Vector2.zero);
-            float margin = 40f;
-
-            window.position = new Rect(
-                mainDisplay.x + margin,
-                mainDisplay.y + margin,
-                mainDisplay.width - 2 * margin,
-                mainDisplay.height - 4 * margin
-            );
-
-            levelIndex = Utilities.GetNumLevels();
-
-            window.Show();
+            levelIndex = Utilities.GetNumLevels(Utilities.DIR_LEVEL_DATA);
+            getWindowCallback = () => GetWindow<LevelCreatorWindow>(WINDOW_NAME);
+            ShowFullscreenWindow(WINDOW_NAME);
         }
 
         [MenuItem("Tools/Level Tools/Edit Existing Level", priority = 1)]
         public static void EditExistingLevel() {
-            LoadLevelFromDisk();
+            EditExistingObject(Utilities.DIR_LEVEL_DATA, WINDOW_NAME);
         }
 
         private void OnGUI() {
 
-            if(counterEntries.Count == 0) {
+            if (counterEntries.Count == 0) {
                 counterEntries.Add(default);
             }
 
@@ -121,12 +105,12 @@ namespace AtomicKitchenChaos.Editor
 
             GUILayout.Space(20);
             if (GUILayout.Button("Save Level File")) {
-                SaveLevelFile();
+                SaveObject();
             }
 
             GUILayout.Space(20);
             if (GUILayout.Button("Load Another Level")) {
-                LoadLevelFromDisk();
+                LoadObjectFromDisk(Utilities.DIR_LEVEL_DATA, WINDOW_NAME);
             }
 
             GUILayout.FlexibleSpace();
@@ -135,7 +119,7 @@ namespace AtomicKitchenChaos.Editor
             GUILayout.Space(10);
         }
 
-        private void DrawCounterList(){
+        private void DrawCounterList() {
             int removeIndex = -1;
             int columns = Mathf.Max(1, Mathf.FloorToInt(position.width / 300f));
             int currentColumn = 0;
@@ -159,10 +143,10 @@ namespace AtomicKitchenChaos.Editor
                 EditorGUI.EndDisabledGroup();
 
 
-                if (counterEntry.isActive) 
+                if (counterEntry.isActive)
                     counterEntry.purchasePrice = 0;
 
-                if(GUILayout.Button("Remove", GUILayout.Width(80))) {
+                if (GUILayout.Button("Remove", GUILayout.Width(80))) {
                     removeIndex = i;
                 }
 
@@ -170,7 +154,7 @@ namespace AtomicKitchenChaos.Editor
                 GUILayout.EndVertical();
 
                 currentColumn++;
-                if(currentColumn >= columns || i == counterEntries.Count - 1) {
+                if (currentColumn >= columns || i == counterEntries.Count - 1) {
                     EditorGUILayout.EndHorizontal();
                     currentColumn = 0;
                 }
@@ -181,7 +165,7 @@ namespace AtomicKitchenChaos.Editor
 
         }
 
-        private void SaveLevelFile() {
+        protected override void SaveObject() {
             if (string.IsNullOrEmpty(levelName)) {
                 Debug.LogWarning("Level name is required.");
                 return;
@@ -199,30 +183,13 @@ namespace AtomicKitchenChaos.Editor
                 }).ToArray()
             };
 
-            string fullPath = Utilities.GetDataPath(Utilities.DIR_LEVEL_DATA, levelName + ".lz4");
-
-            if(DataHandler.TrySaveToFile(levelData, fullPath))
-                Close();
+            SaveObjectFile(Utilities.DIR_LEVEL_DATA, levelName, levelData);
         }
 
-        private static void LoadLevelFromDisk() {
-            string path = EditorUtility.OpenFilePanel("Select Level File", Utilities.GetDataPath(Utilities.DIR_LEVEL_DATA), "lz4");
-
-            if (string.IsNullOrEmpty(path)) return;
-
-            try {
-                DataHandler.TryLoadFromFile(path, out LevelData levelData);
-                LevelCreatorWindow window = GetWindow<LevelCreatorWindow>("Level Creator");
-                window.PopulateLevelData(levelData);
-            } catch (Exception ex) {
-                Debug.LogError($"Failed to load and parse level file:\n{ex}");
-            }
-        }
-
-        private void PopulateLevelData(LevelData data) {
+        protected override void PopulateEditorData(LevelData data) {
             levelName = data.levelName;
 
-            if(!DataHandler.TryLoadFromFile(data.levelRequirementPath, out levelRequirementData)) {
+            if (!DataHandler.TryLoadFromFile(data.levelRequirementPath, out levelRequirementData)) {
                 Debug.LogError("Unable to load Level Requirement Data");
             }
 

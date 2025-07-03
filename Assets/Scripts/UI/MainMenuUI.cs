@@ -37,7 +37,7 @@ namespace AtomicKitchenChaos.UI
         }
 
         private void LevelSelect() {
-            string[] fileNames = Utilities.GetFullFilePaths();
+            string[] fileNames = Utilities.GetFullFilePaths(Utilities.DIR_LEVEL_DATA);
             string[] fileNamesOnly = fileNames.Select(x => Path.GetFileNameWithoutExtension(x)).ToArray();
             UIManager.Instance.PopulateLevelSelector(fileNamesOnly, (index) => {
                 GameEventBus.Publish(new LoadLevelMessage() { levelDataPath = fileNames[index] });

@@ -1,3 +1,17 @@
 {
-	"name": "AtomicKitchenChaos.Dialogue"
+    "name": "AtomicKitchenChaos.Dialogue",
+    "rootNamespace": "AtomicKitchenChaos.Dialogue",
+    "references": [
+        "GUID:84e0a5921ca295645b17b252e63e089d",
+        "GUID:a734d771bf360db44a6a6baee70f39d6"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }
