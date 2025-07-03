@@ -309,6 +309,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4473973905055280480, guid: e36f74dbde10e9543b1ba1a324ea59d4, type: 3}
+      propertyPath: lockedCounterPrefab
+      value: 
+      objectReference: {fileID: 1306872209753049479, guid: ce277e83d17b0e3448fc9ccae80afa88, type: 3}
+    - target: {fileID: 4473973905055280480, guid: e36f74dbde10e9543b1ba1a324ea59d4, type: 3}
       propertyPath: holdPositions.Array.size
       value: 2
       objectReference: {fileID: 0}

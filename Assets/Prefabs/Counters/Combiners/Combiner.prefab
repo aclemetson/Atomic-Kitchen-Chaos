@@ -987,6 +987,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Combiner
       objectReference: {fileID: 0}
+    - target: {fileID: 3524401763757798571, guid: 60ee5dd3553192f409561bf5e5f1c697, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4716022807280755799, guid: 60ee5dd3553192f409561bf5e5f1c697, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1076,10 +1080,4 @@ MonoBehaviour:
     atomLabelContainerUI: {fileID: 4310104197181359252}
   progressBar: {fileID: 5024594541548965302}
   atomPrefab: {fileID: 5527865518452588836, guid: 4a970e9ec43e28a49b3aa3ae46fd32c8, type: 3}
-  visualObject: {fileID: 8037218939027450336}
   recipePanelUI: {fileID: 4441168538695712436}
---- !u!1 &8037218939027450336 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3761312972747587291, guid: 60ee5dd3553192f409561bf5e5f1c697, type: 3}
-  m_PrefabInstance: {fileID: 6609927673323312955}
-  m_PrefabAsset: {fileID: 0}

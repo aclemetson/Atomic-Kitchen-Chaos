@@ -33,6 +33,29 @@ namespace AtomicKitchenChaos.Utility
 
             return Path.Combine(Application.dataPath, dataPath, fileName);
         }
+
+        public static int GetNumLevels() {
+            return GetFullFilePaths().Length;
+        }
+
+        public static string[] GetFullFilePaths() {
+            string absolutePath = Path.Combine(Application.dataPath, DIR_LEVEL_DATA);
+            string extension = "*.lz4";
+
+            if (Directory.Exists(absolutePath)) {
+                string[] files = Directory.GetFiles(absolutePath, extension, SearchOption.TopDirectoryOnly);
+                return files;
+            }
+
+            return default;
+        }
+        #endregion
+
+        #region Scene Utilies
+
+        public static readonly string MAIN_MENU_SCENE = "MainMenuScene";
+        public static readonly string GAME_SCENE = "GameScene";
+
         #endregion
     }
 }

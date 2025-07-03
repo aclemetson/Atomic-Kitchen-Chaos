@@ -2,7 +2,6 @@ using AtomicKitchenChaos.Data;
 using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using AtomicKitchenChaos.Messages;
 using AtomicKitchenChaos.UI;
-using System.Linq;
 using UnityEngine;
 
 namespace AtomicKitchenChaos.Counters.Misc
@@ -10,26 +9,15 @@ namespace AtomicKitchenChaos.Counters.Misc
     public class SubmissionCounter : Counter {
 
         [SerializeField] private IngredientContainerUI ingredientContainerUI;
+        [SerializeField] private SubmissionCounterUI submissionCounterUI;
 
-        private int reward = 10;
-        private SubmissionCounterSO submissionCounterSO;
         private AtomicObjectSO request;
-        private int quantity;
+        private int quantity, reward;
 
         protected override void Start() {
             base.Start();
-            submissionCounterSO = (SubmissionCounterSO)counterSO;
-            SetRequest();
-            for(int i = 0; i < submissionCounterSO.levelRequirementData.atomicObjectRequests.Length; i++) {
-                int requestIndex = i;
-                var atomicObjectRequest = submissionCounterSO.levelRequirementData.atomicObjectRequests[i];
-                for(int j = 0; j < atomicObjectRequest.unlockMessages.Length; j++) {
-                    int messageIndex = j;
-                    var message = atomicObjectRequest.unlockMessages[messageIndex];
-                    AtomicObjectRequestUnlockMessage temp = (AtomicObjectRequestUnlockMessage)message;
-                    GameEventBus.AssignGenericUnlockSubscription(temp, () => { UnlockAtomicObjectRequest(requestIndex, messageIndex); });
-                }
-            }
+            GameEventBus.Subscribe<SetAtomicRequestMessage>(SetRequest);
+            GameEventBus.Publish(new GetAtomicRequestMessage() { counterID = gameObject.GetInstanceID() });
         }
 
         protected override void Interact() {
@@ -42,7 +30,7 @@ namespace AtomicKitchenChaos.Counters.Misc
 
                 if(quantity == 0) {
                     ClaimReward();
-                    SetRequest();
+                    GameEventBus.Publish(new GetAtomicRequestMessage() { counterID = gameObject.GetInstanceID() });
                 }
             }
         }
@@ -55,32 +43,13 @@ namespace AtomicKitchenChaos.Counters.Misc
             GameEventBus.Publish(new AddQuarks() { changeInQuarks = reward });
         }
 
-        private void SetRequest() {
-            LevelRequirementData.AtomicObjectRequest[] atomicObjectRequests = submissionCounterSO.levelRequirementData.atomicObjectRequests.Where(x => !x.isLocked).ToArray();
-            int randomIndex = Random.Range(0, atomicObjectRequests.Length);
-
-            LevelRequirementData.AtomicObjectRequest randomSelection = atomicObjectRequests[randomIndex];
-            DataHandler.TryLoadSO(randomSelection.atomicObjectSOPath, out request);
-            quantity = 1;
-            reward = Random.Range((int)randomSelection.rewardMinimum, (int)randomSelection.rewardMaximum);
-
-            ingredientContainerUI.SetData(request, quantity);
-        }
-
-        private void UnlockAtomicObjectRequest(int requestIndex, int messageIndex) {
-            UnlockMessage message = (UnlockMessage)submissionCounterSO.levelRequirementData.atomicObjectRequests[requestIndex].unlockMessages[messageIndex];
-            message.Unlock();
-            submissionCounterSO.levelRequirementData.atomicObjectRequests[requestIndex].unlockMessages[messageIndex] = message;
-
-            bool[] unlockFlags = submissionCounterSO.levelRequirementData.atomicObjectRequests[requestIndex].unlockMessages.Select(x => ((UnlockMessage)x).IsLocked).ToArray();
-            bool final = unlockFlags.Any(x => x);
-
-            submissionCounterSO.levelRequirementData.atomicObjectRequests[requestIndex].isLocked = final;
-
-            if(!final) {
-                GameEventBus.Publish(new AtomicObjectRequestSuccessMessage() {
-                    atomicObjectSOPath = submissionCounterSO.levelRequirementData.atomicObjectRequests[requestIndex].atomicObjectSOPath
-                });
+        private void SetRequest(SetAtomicRequestMessage message) {
+            if (message.counterID == gameObject.GetInstanceID()) {
+                DataHandler.TryLoadSO(message.atomicObjectSOPath, out request);
+                quantity = message.quantity;
+                reward = message.reward;
+                ingredientContainerUI.SetData(request, quantity);
+                submissionCounterUI.SetReward(reward);
             }
         }
     }

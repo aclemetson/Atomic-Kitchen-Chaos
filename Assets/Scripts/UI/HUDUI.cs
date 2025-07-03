@@ -8,6 +8,7 @@ namespace AtomicKitchenChaos.UI
 {
     internal class HUDUI : MonoBehaviour
     {
+
         [SerializeField] private TextMeshProUGUI quarkCountGUI;
         [SerializeField] private TextMeshProUGUI timerGUI;
         [SerializeField] private Button menuButton;

@@ -3,7 +3,7 @@ using UnityEngine;
 namespace AtomicKitchenChaos.UI
 {
     internal class ExoticMaterialPanelUI : MonoBehaviour {
-        
+
         [SerializeField] private ExoticMaterialUI exoticMaterialContainer;
         [SerializeField] private Transform emVerticalContainer;
 

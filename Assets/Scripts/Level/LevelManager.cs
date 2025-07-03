@@ -1,9 +1,8 @@
 using AtomicKitchenChaos.Counters;
-using AtomicKitchenChaos.Counters.Misc;
 using AtomicKitchenChaos.Data;
 using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using AtomicKitchenChaos.Messages;
-using AtomicKitchenChaos.Utility;
+using AtomicKitchenChaos.SceneManagement;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,16 +10,33 @@ namespace AtomicKitchenChaos.Level
 {
     public class LevelManager : MonoBehaviour
     {
-        [SerializeField] private LockedCounter lockedCounterPrefab;
-        [SerializeField] private string levelPath;
+        public static LevelManager Instance;
 
+        private LevelData levelData;
         private LevelRequirementData levelRequirementData;
         private GameOutcomeData gameOutcomeData;
-        private void Start() {
-            DataHandler.TryLoadFromFile(levelPath, out LevelData levelData);
+        private RequestManager requestManager;
+        private string levelPath;
+
+        public LevelRequirementData LevelRequirementData => levelRequirementData;
+
+        private void Awake() {
+            if (Instance == null) {
+                Instance = this;
+            } else {
+                Destroy(gameObject);
+            }
+
+            levelPath = SceneLoader.LevelDataPath;
+
+            DataHandler.TryLoadFromFile(levelPath, out levelData);
             DataHandler.TryLoadFromFile(levelData.levelRequirementPath, out levelRequirementData);
             DataHandler.TryLoadFromFile(levelRequirementData.gameOutcomePath, out gameOutcomeData);
 
+            requestManager = new RequestManager(levelRequirementData);
+        }
+
+        private void Start() { 
             foreach(var c in levelData.Counters) {
                 LoadCounter(c);
             }
@@ -38,20 +54,13 @@ namespace AtomicKitchenChaos.Level
                 return;
             }
 
-            // For the submission counters, give the level requirement data
-            if (counterSO.GetType() == typeof(SubmissionCounterSO)) {
-                SubmissionCounterSO temp = (SubmissionCounterSO)counterSO;
-                temp.levelRequirementData = levelRequirementData;
-                counterSO = temp;
-            }
-
             Vector3 position = counter.position.ToVector3();
             Counter counterObject;
             if (counter.isActive) {
                 counterObject = Instantiate(AssetDatabase.LoadAssetAtPath<Counter>(counterSO.counterPrefabPath));
                 counterObject.SetCounterSO(counterSO);
             } else {
-                counterObject = Instantiate(lockedCounterPrefab);
+                counterObject = Instantiate(AssetDatabase.LoadAssetAtPath<LockedCounter>(counterSO.lockedCounterPrefabPath));
                 LockedCounter temp = (LockedCounter)counterObject;
                 temp.SetLockedCounter(counterSO, counter.purchasePrice);
             }

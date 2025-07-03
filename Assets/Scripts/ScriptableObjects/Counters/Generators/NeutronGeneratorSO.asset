@@ -15,4 +15,5 @@ MonoBehaviour:
   displayName: Neutron Generator
   material: {fileID: 2100000, guid: 61f2237f278f7cf4cb6d0256f8846869, type: 2}
   counterPrefabPath: Assets/Prefabs/Counters/Generators/Generator.prefab
+  lockedCounterPrefabPath: Assets/Prefabs/Counters/LockedCounter.prefab
   atomicObjectSO: {fileID: 11400000, guid: 76face64ebb2c37438ba94fb176b6fe7, type: 2}

@@ -8,7 +8,6 @@ using UnityEngine.UI;
 
 namespace AtomicKitchenChaos.UI {
     internal class SettingsPopulatorUI : MonoBehaviour {
-
         [Header("Properties")]
         [SerializeField] private TextMeshProUGUI settingsLabel;
         [SerializeField] private SelectableContainerUI containerPrefab;
@@ -37,7 +36,7 @@ namespace AtomicKitchenChaos.UI {
                 go.AddButtonAction(() => {
                     selectedObject = temp;
                     selectedEvent.Invoke(selectedObject);
-                    selectedEvent.RemoveListener(action);
+                    selectedEvent.RemoveAllListeners();
                     CloseMenu();
                     });
 

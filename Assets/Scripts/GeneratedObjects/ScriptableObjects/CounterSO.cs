@@ -10,5 +10,6 @@ namespace AtomicKitchenChaos.GeneratedObjects.ScriptableObjects
         public string displayName;
         public Material material;
         public string counterPrefabPath;
+        public string lockedCounterPrefabPath;
     }
 }

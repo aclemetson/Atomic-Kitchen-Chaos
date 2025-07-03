@@ -40,6 +40,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 28442160013378620, guid: b048180071e2715428de2aac459856de, type: 3}
+      propertyPath: lockedCounterPrefab
+      value: 
+      objectReference: {fileID: 1306872209753049479, guid: ce277e83d17b0e3448fc9ccae80afa88, type: 3}
+    - target: {fileID: 28442160013378620, guid: b048180071e2715428de2aac459856de, type: 3}
       propertyPath: holdPositions.Array.size
       value: 2
       objectReference: {fileID: 0}

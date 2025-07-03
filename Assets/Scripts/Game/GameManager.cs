@@ -1,4 +1,5 @@
 using AtomicKitchenChaos.Messages;
+using AtomicKitchenChaos.SceneManagement;
 using AtomicKitchenChaos.UI;
 using System;
 using UnityEngine;
@@ -16,9 +17,12 @@ namespace AtomicKitchenChaos.Game
         private void Awake() {
             if (Instance == null) {
                 Instance = this;
+                DontDestroyOnLoad(gameObject);
             } else {
                 Destroy(gameObject);
             }
+
+            SceneLoader.Init();
 
             GameEventBus.Subscribe<AddQuarks>(AddQuarks);
             GameEventBus.Subscribe<TryUnlockMessage>(TryUnlock);

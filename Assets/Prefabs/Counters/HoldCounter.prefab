@@ -176,6 +176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dcbb522fc02ece4ba2256484034587e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lockedCounterPrefab: {fileID: 3251722860313883763, guid: 26fc10f9263af364098b7e286a8d052d, type: 3}
   holdPositions:
   - transform: {fileID: 457758888019812532}
     atomLabelContainerUI: {fileID: 4187629640638389323}

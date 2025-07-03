@@ -3,6 +3,7 @@ using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using AtomicKitchenChaos.Utility;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -17,6 +18,8 @@ namespace AtomicKitchenChaos.Editor
         private Vector2 scrollPos;
         private List<CounterEntry> counterEntries = new();
         private int tileHeight = 100;
+        
+        private static int levelIndex;
 
         [MenuItem("Tools/Level Tools/Level Creator", priority = 0)]
         public static void ShowFullscreenWindow() {
@@ -32,6 +35,8 @@ namespace AtomicKitchenChaos.Editor
                 mainDisplay.width - 2 * margin,
                 mainDisplay.height - 4 * margin
             );
+
+            levelIndex = Utilities.GetNumLevels();
 
             window.Show();
         }
@@ -51,11 +56,14 @@ namespace AtomicKitchenChaos.Editor
 
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            EditorGUILayout.BeginVertical("box", GUILayout.Width(400));
+            EditorGUILayout.BeginVertical("box", GUILayout.Width(600));
             GUILayout.Label("Level Information", EditorStyles.boldLabel);
 
+            GUILayout.BeginHorizontal();
             // Level Name Field
             levelName = EditorGUILayout.TextField("Level Name", levelName);
+            levelIndex = EditorGUILayout.IntField("Level Index", levelIndex);
+            GUILayout.EndHorizontal();
 
             // Level Requirement Data
             EditorGUILayout.LabelField("Level Requirement Data", EditorStyles.label);
@@ -180,7 +188,8 @@ namespace AtomicKitchenChaos.Editor
             }
 
             var levelData = new LevelData {
-                LevelName = levelName,
+                levelName = levelName,
+                levelIndex = levelIndex,
                 levelRequirementPath = levelRequirementDataPath,
                 Counters = counterEntries.Select(c => new CounterData {
                     position = new CompressableStructs.CompressableVector3(c.position),
@@ -211,7 +220,7 @@ namespace AtomicKitchenChaos.Editor
         }
 
         private void PopulateLevelData(LevelData data) {
-            levelName = data.LevelName;
+            levelName = data.levelName;
 
             if(!DataHandler.TryLoadFromFile(data.levelRequirementPath, out levelRequirementData)) {
                 Debug.LogError("Unable to load Level Requirement Data");

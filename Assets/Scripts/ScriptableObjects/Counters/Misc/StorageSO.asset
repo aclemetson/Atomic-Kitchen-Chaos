@@ -15,3 +15,4 @@ MonoBehaviour:
   displayName: Storage Counter
   material: {fileID: 2100000, guid: 105a6705290e6de40afe8920c4e61f22, type: 2}
   counterPrefabPath: Assets/Prefabs/Counters/Misc/Storage.prefab
+  lockedCounterPrefabPath: Assets/Prefabs/Counters/LockedCounter.prefab

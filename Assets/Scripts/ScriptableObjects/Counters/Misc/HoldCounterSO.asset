@@ -15,3 +15,4 @@ MonoBehaviour:
   displayName: Hold Counter
   material: {fileID: 2100000, guid: eb2720d2a49f0c2488173823041b9b84, type: 2}
   counterPrefabPath: Assets/Prefabs/Counters/HoldCounter.prefab
+  lockedCounterPrefabPath: Assets/Prefabs/Counters/LockedCounter.prefab

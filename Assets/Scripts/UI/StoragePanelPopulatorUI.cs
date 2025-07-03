@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace AtomicKitchenChaos.UI
 {
-    public class StoragePanelPopulatorUI : MonoBehaviour
+    internal class StoragePanelPopulatorUI : MonoBehaviour
     {
         [Header("Properties")]
         [SerializeField] private StorageItemContainerUI containerPrefab;
