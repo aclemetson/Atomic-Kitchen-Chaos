@@ -1,12 +1,12 @@
 using AtomicKitchenChaos.Data;
 using AtomicKitchenChaos.Editor.MessageMappers;
+using AtomicKitchenChaos.Messages;
 using AtomicKitchenChaos.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using static AtomicKitchenChaos.Data.GameOutcomeData;
 
 namespace AtomicKitchenChaos.Editor
 {
@@ -17,6 +17,7 @@ namespace AtomicKitchenChaos.Editor
         private string dialogueName = "NewDialogue";
         private DialogueData dialogueData;
         private List<DialogueData.DialogueEntryData> dialogueEntries;
+        private List<GameEventMessage> gameEvents;
 
         private static Type[] availableEventTypes;
 
@@ -29,6 +30,7 @@ namespace AtomicKitchenChaos.Editor
 
         [MenuItem("Tools/Level Tools/Edit Existing Dialogue", priority = 61)]
         public static void EditExistingDialgue() {
+            getWindowCallback = () => GetWindow<LevelDialogueCreatorWindow>(WINDOW_NAME);
             EditExistingObject(Utilities.DIR_DIALOGUE_DATA, WINDOW_NAME);
         }
 
@@ -41,6 +43,10 @@ namespace AtomicKitchenChaos.Editor
                 dialogueEntries.Add(default);
             }
 
+            if (gameEvents == null) {
+                gameEvents = new();
+            }
+
             GUILayout.Space(10);
 
             GUILayout.BeginHorizontal();
@@ -49,17 +55,25 @@ namespace AtomicKitchenChaos.Editor
             GUILayout.Label("Dialogue Information", EditorStyles.boldLabel);
 
             dialogueName = EditorGUILayout.TextField("Dialogue Name", dialogueName);
+
             // Add the Triggering Message
-            Type editorType = null;
-            if(dialogueData.triggeringMessage != null) {
-                MessageMapper.DIALOGUE_TRIGGER_MAPPER.TryGetValue(dialogueData.triggeringMessage.GetType(), out editorType);
+            List<MessageEditor> messageEditors = new();
+
+            foreach(var message in gameEvents) {
+                if (MessageMapper.DIALOGUE_TRIGGER_MAPPER.TryGetValue(message.GetType(), out Type editorType)) {
+                    var editor = (MessageEditor)Activator.CreateInstance(editorType, message);
+                    messageEditors.Add(editor);
+                }
             }
 
             GenericMenu menu = new GenericMenu();
             for (int i = 0; i < availableEventTypes.Length; i++) {
                 var eventType = availableEventTypes[i];
                 menu.AddItem(new GUIContent(eventType.Name), false, () => {
-                    MessageMapper.DIALOGUE_TRIGGER_MAPPER.TryGetValue(eventType, out editorType);
+                    if(MessageMapper.DIALOGUE_TRIGGER_MAPPER.TryGetValue(eventType, out Type editorType)) {
+                        var message = (GameEventMessage)Activator.CreateInstance(eventType);
+                        gameEvents.Add(message);
+                    }
                 });
             }
             if (EditorGUILayout.DropdownButton(new GUIContent("Add Game Message"), FocusType.Keyboard)) {
@@ -67,9 +81,21 @@ namespace AtomicKitchenChaos.Editor
             }
 
             GUILayout.Space(20);
-            if(editorType != null) {
-                var editor = (MessageEditor)Activator.CreateInstance(editorType, dialogueData.triggeringMessage);
+
+            int indexToRemove = -1;
+            for (int i = 0; i < messageEditors.Count; i++) {
+                var editor = messageEditors[i];
+                var message = gameEvents[i];
+
+                EditorGUILayout.BeginVertical("box");
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Label(message.GetType().Name, EditorStyles.boldLabel);
+                if (GUILayout.Button("Remove", GUILayout.Width(60))) {
+                    indexToRemove = i;
+                }
+                EditorGUILayout.EndHorizontal();
                 editor.EditorDrawingFunction();
+                EditorGUILayout.EndVertical();
             }
 
             EditorGUILayout.EndVertical();
@@ -110,11 +136,16 @@ namespace AtomicKitchenChaos.Editor
             GUILayout.EndHorizontal();
 
             GUILayout.Space(10);
+
+            if(indexToRemove >= 0) gameEvents.RemoveAt(indexToRemove);
+
+            dialogueData.triggeringMessages = gameEvents.ToArray();
+            dialogueData.messagesHaveTriggered = new bool[gameEvents.Count];
         }
 
         private void DrawDialogueList() {
             int removeIndex = -1;
-            int columns = Mathf.Max(1, Mathf.FloorToInt(position.width / 300f));
+            int columns = Mathf.Max(1, Mathf.FloorToInt(position.width / 600f));
             int currentColumn = 0;
 
             EditorGUILayout.BeginVertical();
@@ -161,6 +192,7 @@ namespace AtomicKitchenChaos.Editor
             dialogueName = dialogueData.dialogueName;
             this.dialogueData = dialogueData;
             dialogueEntries = dialogueData.dialogueEntries.ToList();
+            gameEvents = dialogueData.triggeringMessages.ToList();
 
             availableEventTypes = MessageMapper.DIALOGUE_TRIGGER_MAPPER.Keys.ToArray();
         }

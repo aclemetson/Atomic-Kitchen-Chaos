@@ -7,7 +7,8 @@ namespace AtomicKitchenChaos.Data {
     public struct DialogueData {
 
         public string dialogueName;
-        public GameEventMessage triggeringMessage;
+        public GameEventMessage[] triggeringMessages;
+        public bool[] messagesHaveTriggered;
         public DialogueEntryData[] dialogueEntries;
 
         [Serializable]

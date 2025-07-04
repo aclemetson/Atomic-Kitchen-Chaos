@@ -13,6 +13,10 @@ namespace AtomicKitchenChaos.Messages
 
         protected UnityEvent unlockEvent = new();
 
+        public override void SubscriptionCheck(GameEventMessage payload) {
+            Trigger();
+        }
+
         public void AddUnlockAction(UnityAction action) {
             isLocked = true;
             unlockEvent.AddListener(action);

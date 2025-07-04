@@ -31,6 +31,7 @@ namespace AtomicKitchenChaos.Game
         private void TryUnlock(TryUnlockMessage payload) {
             if(quarkCount >= payload.unlockPrice) {
                 quarkCount -= payload.unlockPrice;
+                GameEventBus.Publish(new QuarkCountMessage() { quarkCount = quarkCount });
                 UIManager.Instance.SetQuarkCount(quarkCount);
                 payload.callback.Invoke();
             }
@@ -41,6 +42,7 @@ namespace AtomicKitchenChaos.Game
             netWorth += payload.changeInQuarks;
             Debug.Log($"Net Worth: {netWorth}");
             UIManager.Instance.SetQuarkCount(quarkCount);
+            GameEventBus.Publish(new QuarkCountMessage() { quarkCount = quarkCount });
             GameEventBus.Publish(new NetWorthMessage() { value = netWorth });
         }
     }

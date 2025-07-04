@@ -32,6 +32,7 @@ namespace AtomicKitchenChaos.Editor {
 
         [MenuItem("Tools/Level Tools/Edit Existing Level Requirements", priority = 21)]
         public static void EditExistingLevelRequirements() {
+            getWindowCallback = () => GetWindow<LevelRequirementsCreatorWindow>(WINDOW_NAME);
             EditExistingObject(Utilities.DIR_LEVEL_REQUIREMENT_DATA, WINDOW_NAME);
         }
 

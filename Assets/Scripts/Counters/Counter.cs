@@ -2,7 +2,6 @@ using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using AtomicKitchenChaos.Players;
 using AtomicKitchenChaos.UI;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace AtomicKitchenChaos.Counters {
@@ -38,7 +37,7 @@ namespace AtomicKitchenChaos.Counters {
         }
 
         protected void AddInteraction() {
-            if (!addedInteraction) {
+            if (!addedInteraction && playerManager != null) {
                 playerManager.PrimaryInteractionEvent.AddListener(Interact);
                 playerManager.SecondaryInteractionEvent.AddListener(SettingsInteraction);
                 addedInteraction = true;
@@ -46,7 +45,7 @@ namespace AtomicKitchenChaos.Counters {
         }
 
         protected void RemoveInteraction() {
-            if (addedInteraction) {
+            if (addedInteraction && playerManager != null) {
                 playerManager.PrimaryInteractionEvent.RemoveListener(Interact);
                 playerManager.SecondaryInteractionEvent.RemoveListener(SettingsInteraction);
                 addedInteraction = false;

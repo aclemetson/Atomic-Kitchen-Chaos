@@ -1,10 +1,5 @@
 using AtomicKitchenChaos.Data;
 using AtomicKitchenChaos.Utility;
-using K4os.Compression.LZ4;
-using System;
-using System.IO;
-using System.Text;
-using UnityEngine;
 
 namespace AtomicKitchenChaos.Level
 {

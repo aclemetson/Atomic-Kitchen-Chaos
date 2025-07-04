@@ -1,4 +1,5 @@
 using AtomicKitchenChaos.Data;
+using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -24,7 +25,8 @@ namespace AtomicKitchenChaos.UI
 
             for (int i = 0; i < storageData.Length; i++) {
                 var go = Instantiate(containerPrefab, gridContainer);
-                go.SetContainer(storageData[i].DisplayName, storageData[i].quantity);
+                DataHandler.TryLoadSO(storageData[i].AtomicObjectSOPath, out AtomicObjectSO atomicObjectSO);
+                go.SetContainer(atomicObjectSO, storageData[i].quantity);
                 int temp = i;
                 go.AddButtonAction(() => {
                     action.Invoke(temp);

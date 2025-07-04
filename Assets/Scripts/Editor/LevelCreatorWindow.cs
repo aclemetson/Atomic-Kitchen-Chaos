@@ -3,6 +3,7 @@ using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using AtomicKitchenChaos.Utility;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -14,6 +15,8 @@ namespace AtomicKitchenChaos.Editor {
         private string levelName = "NewLevel";
         private LevelRequirementData levelRequirementData;
         private string levelRequirementDataPath = "";
+        private DialogueBundleData dialogueBundleData;
+        private string dialogueBundlePath = "";
         private List<CounterEntry> counterEntries = new();
 
         private static int levelIndex;
@@ -27,6 +30,7 @@ namespace AtomicKitchenChaos.Editor {
 
         [MenuItem("Tools/Level Tools/Edit Existing Level", priority = 1)]
         public static void EditExistingLevel() {
+            getWindowCallback = () => GetWindow<LevelCreatorWindow>(WINDOW_NAME);
             EditExistingObject(Utilities.DIR_LEVEL_DATA, WINDOW_NAME);
         }
 
@@ -54,8 +58,8 @@ namespace AtomicKitchenChaos.Editor {
 
             GUILayout.BeginHorizontal();
 
-            string assetName = string.IsNullOrEmpty(levelRequirementData.levelRequirementName) ? "None Selected" : levelRequirementData.levelRequirementName;
-            EditorGUILayout.LabelField(assetName, GUILayout.MaxWidth(200));
+            string levelRequirementsAsset = string.IsNullOrEmpty(levelRequirementData.levelRequirementName) ? "None Selected" : levelRequirementData.levelRequirementName;
+            EditorGUILayout.LabelField(levelRequirementsAsset, GUILayout.MaxWidth(200));
 
             if (GUILayout.Button("Browse", GUILayout.Width(80))) {
                 string selectedPath = EditorUtility.OpenFilePanel(
@@ -67,6 +71,32 @@ namespace AtomicKitchenChaos.Editor {
                     // Convert full path to relative project path
                     levelRequirementDataPath = Utilities.GetUnityRelativeAssetPath(selectedPath);
                     if (!DataHandler.TryLoadFromFile(levelRequirementDataPath, out levelRequirementData)) {
+                        Debug.LogError("Selected file is not valid");
+                    }
+                }
+            }
+
+            GUILayout.EndHorizontal();
+
+            GUILayout.Space(10);
+            // Dialogue Bundle Data
+            EditorGUILayout.LabelField("Dialogue Bundle Data", EditorStyles.label);
+
+            GUILayout.BeginHorizontal();
+
+            string dialogueBundleAsset = string.IsNullOrEmpty(dialogueBundlePath) ? "None Selected" : Path.GetFileNameWithoutExtension(dialogueBundlePath);
+            EditorGUILayout.LabelField(dialogueBundleAsset, GUILayout.MaxWidth(200));
+
+            if (GUILayout.Button("Browse", GUILayout.Width(80))) {
+                string selectedPath = EditorUtility.OpenFilePanel(
+                    "Select Dialogue Bundle Asset",
+                    Utilities.DIR_DIALOGUE_BUNDLE_DATA,
+                    "lz4"
+                    );
+                if (!string.IsNullOrEmpty(selectedPath)) {
+                    // Conver full path to relative project path
+                    dialogueBundlePath = Utilities.GetUnityRelativeAssetPath(selectedPath);
+                    if(!DataHandler.TryLoadFromFile(dialogueBundlePath, out dialogueBundleData)) {
                         Debug.LogError("Selected file is not valid");
                     }
                 }
@@ -136,6 +166,13 @@ namespace AtomicKitchenChaos.Editor {
 
                 counterEntry.position = EditorGUILayout.Vector3Field("Position", counterEntry.position);
                 counterEntry.counterSO = (CounterSO)EditorGUILayout.ObjectField("Counter SO", counterEntry.counterSO, typeof(CounterSO), false);
+
+                if (counterEntry.counterSO != null && counterEntry.counterSO.GetType() == typeof(CombinerSO)) {
+                    var combinerSO = (CombinerSO)counterEntry.counterSO;
+                    combinerSO.recipeListSO = (RecipeListSO)EditorGUILayout.ObjectField("Recipe List SO", combinerSO.recipeListSO, typeof(RecipeListSO), false);
+                    counterEntry.counterSO = combinerSO;
+                }
+
                 counterEntry.isActive = EditorGUILayout.Toggle("Is Acitve", counterEntry.isActive);
 
                 EditorGUI.BeginDisabledGroup(counterEntry.isActive);
@@ -175,6 +212,7 @@ namespace AtomicKitchenChaos.Editor {
                 levelName = levelName,
                 levelIndex = levelIndex,
                 levelRequirementPath = levelRequirementDataPath,
+                dialogueBundlePath = dialogueBundlePath,
                 Counters = counterEntries.Select(c => new CounterData {
                     position = new CompressableStructs.CompressableVector3(c.position),
                     counterSOpath = AssetDatabase.GetAssetPath(c.counterSO),
@@ -194,6 +232,7 @@ namespace AtomicKitchenChaos.Editor {
             }
 
             levelRequirementDataPath = data.levelRequirementPath;
+            dialogueBundlePath = data.dialogueBundlePath;
 
             counterEntries = data.Counters.Select(c => new CounterEntry {
                 position = c.position.ToVector3(),

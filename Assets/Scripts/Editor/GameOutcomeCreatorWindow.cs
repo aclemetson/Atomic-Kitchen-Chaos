@@ -30,6 +30,7 @@ namespace AtomicKitchenChaos.Editor {
 
         [MenuItem("Tools/Level Tools/Edit Existing Game Outcomes", priority = 41)]
         public static void EditExistingGameOutcomes() {
+            getWindowCallback = () => GetWindow<GameOutcomeCreatorWindow>(WINDOW_NAME);
             EditExistingObject(Utilities.DIR_GAME_OUTCOME_DATA, WINDOW_NAME);
         }
 

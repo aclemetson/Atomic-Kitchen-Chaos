@@ -7,6 +7,6 @@ namespace AtomicKitchenChaos.Data
     public struct DialogueBundleData 
     {
         public string dialogueBundleName;
-        public string[] dialoguePaths;
+        public string[] dialogueDataPaths;
     }
 }

@@ -11,7 +11,7 @@ namespace AtomicKitchenChaos.Editor
     {
         private static readonly string WINDOW_NAME = "Create Dialogue";
 
-        private string dialogueBundleName;
+        private string dialogueBundleName = "NewDialogueBundle";
         private DialogueBundleData dialogueBundleData;
         private string folderPath = "";
         private List<string> allDialogueFiles = new();
@@ -103,7 +103,7 @@ namespace AtomicKitchenChaos.Editor
             }
 
             dialogueBundleData.dialogueBundleName = dialogueBundleName;
-            dialogueBundleData.dialoguePaths = orderedFiles.ToArray();
+            dialogueBundleData.dialogueDataPaths = orderedFiles.ToArray();
             string fullPath = Utilities.GetDataPath(Utilities.DIR_DIALOGUE_BUNDLE_DATA, dialogueBundleName + ".lz4");
             DataHandler.TrySaveToFile(dialogueBundleData, fullPath);
         }

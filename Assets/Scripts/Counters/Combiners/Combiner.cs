@@ -1,9 +1,12 @@
 using AtomicKitchenChaos.Game;
 using AtomicKitchenChaos.GeneratedObjects;
 using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
+using AtomicKitchenChaos.Messages;
 using AtomicKitchenChaos.UI;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace AtomicKitchenChaos.Counters.Combiners {
@@ -30,7 +33,7 @@ namespace AtomicKitchenChaos.Counters.Combiners {
         }
 
         protected override void Interact() {
-            if (state == State.Idle) {
+            if (state == State.Idle && currentRecipe != null) {
                 StartWork();
             } else if (state == State.Full) {
                 if(TryCollect()) {
@@ -52,6 +55,7 @@ namespace AtomicKitchenChaos.Counters.Combiners {
                         SetLabel(result, holdPositions[i].atomLabelContainerUI);
                     }
                 }
+                GameEventBus.Publish(new CombinerCompleteObjectMessage() { atomicObjectSOPaths = currentRecipe.results.Select(t => AssetDatabase.GetAssetPath(t)).ToArray() });
                 ExoticMaterialManager.Instance.HandleExoticMatter(currentRecipe.GetExoticMaterialCounts());
             }
             if (isNextTo) {
@@ -83,6 +87,11 @@ namespace AtomicKitchenChaos.Counters.Combiners {
         }
 
         private void SetNewRecipe(int recipeIndex) {
+
+            if(recipeListSO == null || recipeListSO.recipeList.All(t => t.IsLocked)) {
+                return;
+            }
+
             if (recipeListSO.recipeList.Count == 0) {
                 Debug.LogError($"Recipe List {recipeListSO.displayName} does not have any recipes.");
                 return;

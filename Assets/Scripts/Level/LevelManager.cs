@@ -3,6 +3,9 @@ using AtomicKitchenChaos.Data;
 using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using AtomicKitchenChaos.Messages;
 using AtomicKitchenChaos.SceneManagement;
+using AtomicKitchenChaos.UI;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,8 +18,12 @@ namespace AtomicKitchenChaos.Level
         private LevelData levelData;
         private LevelRequirementData levelRequirementData;
         private GameOutcomeData gameOutcomeData;
+        private DialogueBundleData dialogueBundleData;
+        private DialogueData[] dialogueDatas;
         private RequestManager requestManager;
         private string levelPath;
+
+        private FinalSubmissionCounter finalSubmissionCounter = null;
 
         public LevelRequirementData LevelRequirementData => levelRequirementData;
 
@@ -32,6 +39,15 @@ namespace AtomicKitchenChaos.Level
             DataHandler.TryLoadFromFile(levelPath, out levelData);
             DataHandler.TryLoadFromFile(levelData.levelRequirementPath, out levelRequirementData);
             DataHandler.TryLoadFromFile(levelRequirementData.gameOutcomePath, out gameOutcomeData);
+            DataHandler.TryLoadFromFile(levelData.dialogueBundlePath, out dialogueBundleData);
+
+            List<DialogueData> data = new();
+            foreach (var dialogueDataPath in dialogueBundleData.dialogueDataPaths) {
+                if(DataHandler.TryLoadFromFile(dialogueDataPath, out DialogueData dialogueData)) {
+                    data.Add(dialogueData);
+                }
+            }
+            dialogueDatas = data.ToArray();
 
             requestManager = new RequestManager(levelRequirementData);
         }
@@ -42,13 +58,31 @@ namespace AtomicKitchenChaos.Level
             }
 
             foreach (var gameOutcome in gameOutcomeData.gameOutcomes) {
-                UnlockMessage temp = (UnlockMessage)gameOutcome.message;
-                GameEventBus.AssignGenericUnlockSubscription(temp, UpdateGameState);
+                if(gameOutcome.message.GetType() == typeof(AtomicFinalSubmissionRequestMessage)) {
+                    // Send to Final Submission Counter
+                    if(finalSubmissionCounter != null) {
+                        AtomicFinalSubmissionRequestMessage message = (AtomicFinalSubmissionRequestMessage)gameOutcome.message;
+                        finalSubmissionCounter.SetAtomicObjectRequest(message);
+                    } else {
+                        Debug.LogError("Unable to Set Final Submission Request to Final Submission Counter. Counter did not load.");
+                    }
+                } else {
+                    // Temporary
+                    UnlockMessage message = (UnlockMessage)gameOutcome.message;
+                    GameEventBus.AssignGenericUnlockSubscription(message, UpdateGameState);
+                }
             }
+
+            foreach(var dialogueData in dialogueDatas) {
+
+                AssignTriggeringChecks(dialogueData);
+            }
+
+            GameEventBus.Publish(new LevelStartMessage());
         }
 
         private void LoadCounter(CounterData counter) {
-            CounterSO counterSO = AssetDatabase.LoadAssetAtPath<CounterSO>(counter.counterSOpath);
+            DataHandler.TryLoadSO(counter.counterSOpath, out CounterSO counterSO);
             if (counterSO == null) {
                 Debug.LogWarning($"Missing CounterSO at path: {counter.counterSOpath}");
                 return;
@@ -65,10 +99,33 @@ namespace AtomicKitchenChaos.Level
                 temp.SetLockedCounter(counterSO, counter.purchasePrice);
             }
             counterObject.transform.position = position;
+
+            // If the counter is the Final Submission Counter, keep track of it
+            // Make sure there isn't more than one
+            if(counterObject is FinalSubmissionCounter) {
+                if(finalSubmissionCounter == null) {
+                    finalSubmissionCounter = (FinalSubmissionCounter)counterObject;
+                } else {
+                    Debug.LogError("There is more than one Final Submission Counter in the level.");
+                }
+            }
         }
 
         private void UpdateGameState() {
             Debug.Log("Game State is Successfully Updated");
+        }
+
+        private void AssignTriggeringChecks(DialogueData dialogueData) {
+            for (int i = 0; i < dialogueData.triggeringMessages.Length; i++) {
+                int staticIndex = i;
+                UnlockMessage message = (UnlockMessage)dialogueData.triggeringMessages[staticIndex];
+                GameEventBus.AssignGenericUnlockSubscription(message, () => {
+                    dialogueData.messagesHaveTriggered[staticIndex] = true;
+                    if(dialogueData.messagesHaveTriggered.All(t => t)) {
+                        UIManager.Instance.StartDialogue(dialogueData);
+                    }
+                });
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 using AtomicKitchenChaos.Data;
 using AtomicKitchenChaos.GeneratedObjects;
+using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using AtomicKitchenChaos.Messages;
 using AtomicKitchenChaos.Utility;
 using Codice.Client.Common.GameUI;
@@ -14,9 +15,11 @@ namespace AtomicKitchenChaos.UI {
         
         [SerializeField] private Canvas canvas;
         [SerializeField] private LevelSelectorPopulatorUI levelSelectorPopulatorUI;
-        [SerializeField] private SettingsPopulatorUI settingsPopulatorUI;
+        [SerializeField] private CombinerSettingsPopulatorUI combinerSettingsPopulatorUI;
         [SerializeField] private StoragePanelPopulatorUI storagePanelPopulatorUI;
+        [SerializeField] private FinalSubmissionUI finalSubmissionUI;
         [SerializeField] private ExoticMaterialPanelUI exoticMaterialPanelUI;
+        [SerializeField] private DialoguePanelUI dialoguePanelUI;
         [SerializeField] private HUDUI hudUI;
         [SerializeField] private GameObject mainMenuUI;
         [SerializeField] private Image background;
@@ -32,18 +35,26 @@ namespace AtomicKitchenChaos.UI {
             }
         }
 
+        private void Start() {
+            dialoguePanelUI.SetCloseMenu(() => {
+                mainMenuUI.SetActive(false);
+                GameEventBus.Publish(new DialogueHasFinishedMessage() { dialogueName = dialoguePanelUI.DialogueData.dialogueName });
+            });
+        }
+
         public void SetSceneUI(string sceneName) {
             if(sceneName == Utilities.GAME_SCENE) {
-                hudUI.enabled = true;
-                exoticMaterialPanelUI.enabled = true;
+                hudUI.gameObject.SetActive(true);
+                exoticMaterialPanelUI.gameObject.SetActive(true);
                 mainMenuUI.SetActive(false);
                 background.gameObject.SetActive(false);
+                finalSubmissionUI.gameObject.SetActive(false);
             } else {
-                levelSelectorPopulatorUI.enabled = false;
-                settingsPopulatorUI.enabled = false;
-                storagePanelPopulatorUI.enabled = false;
-                exoticMaterialPanelUI.enabled = false;
-                hudUI.enabled = false;
+                levelSelectorPopulatorUI.gameObject.SetActive(false);
+                storagePanelPopulatorUI.gameObject.SetActive(false);
+                exoticMaterialPanelUI.gameObject.SetActive(false);
+                hudUI.gameObject.SetActive(false);
+                finalSubmissionUI.gameObject.SetActive(false);
             }
         }
 
@@ -52,11 +63,15 @@ namespace AtomicKitchenChaos.UI {
         }
 
         public void PopulateSettingsMenu(string settingsText, List<ISettingsObject> list, UnityAction<int> action) {
-            settingsPopulatorUI.PopulateSettingsMenu(settingsText, list, action);
+            combinerSettingsPopulatorUI.PopulateSettingsMenu(settingsText, list, action);
         }
 
         public void PopulateStorageMenu(StorageData[] storageData, UnityAction<int> action) {
             storagePanelPopulatorUI.PopulateStorageMenu(storageData, action);
+        }
+
+        public void PopulateFinalSubmissionPanel(AtomicObjectSO[] atomicObjectSOs, int[] quantities) {
+            finalSubmissionUI.PopulateFinalSubmissionPanel(atomicObjectSOs, quantities);
         }
 
         public void AddExoticMaterialUI(string material, int count) {
@@ -65,6 +80,11 @@ namespace AtomicKitchenChaos.UI {
 
         public void SetQuarkCount(long quarkCount) {
             hudUI.SetQuarkCount(quarkCount);
+        }
+
+        public void StartDialogue(DialogueData dialogueData) {
+            mainMenuUI.SetActive(true);
+            dialoguePanelUI.StartDialogue(dialogueData);
         }
     }
 }

@@ -1,3 +1,4 @@
+using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,13 +8,13 @@ namespace AtomicKitchenChaos.UI
 {
     public class StorageItemContainerUI : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI atomicObjectLabel;
+        [SerializeField] private AtomLabelContainerUI atomicObjectLabel;
         [SerializeField] private TextMeshProUGUI quantityLabel;
         [SerializeField] private Button selectButton;
 
-        internal void SetContainer(string name, int quantity) {
+        internal void SetContainer(AtomicObjectSO atomicObjectSO, int quantity) {
             gameObject.SetActive(true);
-            atomicObjectLabel.text = name;
+            atomicObjectLabel.SetAtomPanel(atomicObjectSO);
             if (quantity > 1) {
                 quantityLabel.text = $"x{quantity}";
             } else {
