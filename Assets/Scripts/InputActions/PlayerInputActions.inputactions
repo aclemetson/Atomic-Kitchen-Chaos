@@ -112,6 +112,94 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Builder",
+            "id": "302366d7-44d4-4a4a-a463-1843205c87c7",
+            "actions": [
+                {
+                    "name": "PlaceObject",
+                    "type": "Button",
+                    "id": "2665943a-70b9-4b76-9ae4-894003a85819",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RotateObjectLeft",
+                    "type": "Button",
+                    "id": "fff1d60a-5409-47c2-95db-df543cbad271",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "RotateObjectRight",
+                    "type": "Button",
+                    "id": "61cd2bf4-32b0-4f94-b33c-4c6782278deb",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MousePosition",
+                    "type": "Value",
+                    "id": "e8e29b92-45bb-4568-9160-7bc8fe78d92c",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "cc93ef73-bb3e-4321-b8b1-07c0e6fca76d",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PlaceObject",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "59bfad4b-50aa-4db5-b7a3-29b958cb0049",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateObjectLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bcc4fb61-f496-4054-ada0-696f98705d58",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateObjectRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8ff9178a-7177-4367-92af-9e3beae90389",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MousePosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

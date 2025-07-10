@@ -1,13 +1,9 @@
-using AtomicKitchenChaos.Data;
 using AtomicKitchenChaos.Messages;
 using AtomicKitchenChaos.Utility;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace AtomicKitchenChaos.UI
@@ -36,19 +32,20 @@ namespace AtomicKitchenChaos.UI
         }
 
         private void Settings() {
-            throw new NotImplementedException();
+            // Temporary send to RTS Scene
+            GameEventBus.Publish(new LoadSceneMessage() { sceneName = Utilities.RTS_SCENE });
         }
 
         private void LevelSelect() {
             string[] fileNames = Utilities.GetFullFilePaths(Utilities.DIR_LEVEL_DATA);
             string[] fileNamesOnly = fileNames.Select(x => Path.GetFileNameWithoutExtension(x)).ToArray();
             UIManager.Instance.PopulateLevelSelector(fileNamesOnly, (index) => {
-                GameEventBus.Publish(new LoadLevelMessage() { levelDataPath = fileNames[index] });
+                GameEventBus.Publish(new LoadSceneMessage() { sceneName = Utilities.GAME_SCENE, levelDataPath = fileNames[index] });
             });
         }
 
         private void StartGame() {
-            GameEventBus.Publish(new LoadLevelMessage() { levelDataPath = "Assets/Resources/Levels/NewLevel.lz4" });
+            GameEventBus.Publish(new LoadSceneMessage() { sceneName = Utilities.GAME_SCENE, levelDataPath = "Assets/Resources/Levels/Level1.lz4" });
         }
     }
 }

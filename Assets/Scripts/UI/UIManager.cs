@@ -3,16 +3,19 @@ using AtomicKitchenChaos.GeneratedObjects;
 using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using AtomicKitchenChaos.Messages;
 using AtomicKitchenChaos.Utility;
-using Codice.Client.Common.GameUI;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using BuildData = AtomicKitchenChaos.Messages.BuildDataChangeMessage.BuildData;
 
 namespace AtomicKitchenChaos.UI {
     public class UIManager : MonoBehaviour {
         public static UIManager Instance;
-        
+
+        #region GameScene
+        [Header("GameScene")]
         [SerializeField] private Canvas canvas;
         [SerializeField] private LevelSelectorPopulatorUI levelSelectorPopulatorUI;
         [SerializeField] private CombinerSettingsPopulatorUI combinerSettingsPopulatorUI;
@@ -46,29 +49,43 @@ namespace AtomicKitchenChaos.UI {
             dialoguePanelUI.SetCloseMenu(() => {
                 GameEventBus.Publish(new DialogueHasFinishedMessage() { dialogueName = dialoguePanelUI.DialogueData.dialogueName });
             });
+            GameEventBus.Subscribe<BuildDataChangeMessage>(SetBuildMenuInformation);
         }
 
         public void SetSceneUI(string sceneName) {
-            if(sceneName == Utilities.GAME_SCENE) {
-                hudUI.gameObject.SetActive(true);
-                exoticMaterialPanelUI.gameObject.SetActive(true);
-                mainMenuUI.gameObject.SetActive(false);
-                background.gameObject.SetActive(false);
-                finalSubmissionUI.gameObject.SetActive(false);
-                gameOverPanelUI.gameObject.SetActive(false);
-            } else {
-                levelSelectorPopulatorUI.gameObject.SetActive(false);
-                storagePanelPopulatorUI.gameObject.SetActive(false);
-                exoticMaterialPanelUI.gameObject.SetActive(false);
-                hudUI.gameObject.SetActive(false);
-                finalSubmissionUI.gameObject.SetActive(false);
-                gameOverPanelUI.gameObject.SetActive(false);
+            switch(sceneName) {
+                case Utilities.GAME_SCENE:
+                    mainMenuUI.gameObject.SetActive(false);
+                    hudUI.gameObject.SetActive(true);
+                    exoticMaterialPanelUI.gameObject.SetActive(true);
+                    break;
 
-                if (!hasStartedUp) {
-                    mainMenuUI.gameObject.SetActive(true);
-                    hasStartedUp = true;
-                }
+                case Utilities.MAIN_MENU_SCENE:
+
+                    if (!hasStartedUp) {
+                        mainMenuUI.gameObject.SetActive(true);
+                        hasStartedUp = true;
+                    }
+
+                    break;
+
+                case Utilities.RTS_SCENE:
+                    mainMenuUI.gameObject.SetActive(false);
+                    hudUI.gameObject.SetActive(true);
+                    break;
+
+                default:
+                    hudUI.gameObject.SetActive(false);
+                    exoticMaterialPanelUI.gameObject.SetActive(false);
+                    break;
             }
+
+            // All Scenes
+            buildMenuUI.gameObject.SetActive(false);
+            levelSelectorPopulatorUI.gameObject.SetActive(false);
+            storagePanelPopulatorUI.gameObject.SetActive(false);
+            finalSubmissionUI.gameObject.SetActive(false);
+            gameOverPanelUI.gameObject.SetActive(false);
         }
 
         public void PopulateLevelSelector(string[] levelNames, UnityAction<int> action) {
@@ -112,5 +129,18 @@ namespace AtomicKitchenChaos.UI {
             menuIsUp = true;
             gameOverPanelUI.LevelFinished();
         }
+
+        #endregion
+
+        #region RTSScene
+
+        [Header("RTSScene")]
+        [SerializeField] private BuildMenuUI buildMenuUI;
+
+        private void SetBuildMenuInformation(BuildDataChangeMessage payload) {
+            buildMenuUI.SetBuildMenuInformation(payload.buildData);
+        }
+
+        #endregion
     }
 }

@@ -136,6 +136,94 @@ namespace AtomicKitchenChaos.InputActions
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Builder"",
+            ""id"": ""302366d7-44d4-4a4a-a463-1843205c87c7"",
+            ""actions"": [
+                {
+                    ""name"": ""PlaceObject"",
+                    ""type"": ""Button"",
+                    ""id"": ""2665943a-70b9-4b76-9ae4-894003a85819"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RotateObjectLeft"",
+                    ""type"": ""Button"",
+                    ""id"": ""fff1d60a-5409-47c2-95db-df543cbad271"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RotateObjectRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""61cd2bf4-32b0-4f94-b33c-4c6782278deb"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MousePosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""e8e29b92-45bb-4568-9160-7bc8fe78d92c"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""cc93ef73-bb3e-4321-b8b1-07c0e6fca76d"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PlaceObject"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""59bfad4b-50aa-4db5-b7a3-29b958cb0049"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateObjectLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bcc4fb61-f496-4054-ada0-696f98705d58"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateObjectRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8ff9178a-7177-4367-92af-9e3beae90389"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MousePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -145,11 +233,18 @@ namespace AtomicKitchenChaos.InputActions
             m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
             m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
             m_Player_Settings = m_Player.FindAction("Settings", throwIfNotFound: true);
+            // Builder
+            m_Builder = asset.FindActionMap("Builder", throwIfNotFound: true);
+            m_Builder_PlaceObject = m_Builder.FindAction("PlaceObject", throwIfNotFound: true);
+            m_Builder_RotateObjectLeft = m_Builder.FindAction("RotateObjectLeft", throwIfNotFound: true);
+            m_Builder_RotateObjectRight = m_Builder.FindAction("RotateObjectRight", throwIfNotFound: true);
+            m_Builder_MousePosition = m_Builder.FindAction("MousePosition", throwIfNotFound: true);
         }
 
         ~@PlayerInputActions()
         {
             UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, PlayerInputActions.Player.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_Builder.enabled, "This will cause a leak and performance issues, PlayerInputActions.Builder.Disable() has not been called.");
         }
 
         public void Dispose()
@@ -269,11 +364,88 @@ namespace AtomicKitchenChaos.InputActions
             }
         }
         public PlayerActions @Player => new PlayerActions(this);
+
+        // Builder
+        private readonly InputActionMap m_Builder;
+        private List<IBuilderActions> m_BuilderActionsCallbackInterfaces = new List<IBuilderActions>();
+        private readonly InputAction m_Builder_PlaceObject;
+        private readonly InputAction m_Builder_RotateObjectLeft;
+        private readonly InputAction m_Builder_RotateObjectRight;
+        private readonly InputAction m_Builder_MousePosition;
+        public struct BuilderActions
+        {
+            private @PlayerInputActions m_Wrapper;
+            public BuilderActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @PlaceObject => m_Wrapper.m_Builder_PlaceObject;
+            public InputAction @RotateObjectLeft => m_Wrapper.m_Builder_RotateObjectLeft;
+            public InputAction @RotateObjectRight => m_Wrapper.m_Builder_RotateObjectRight;
+            public InputAction @MousePosition => m_Wrapper.m_Builder_MousePosition;
+            public InputActionMap Get() { return m_Wrapper.m_Builder; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(BuilderActions set) { return set.Get(); }
+            public void AddCallbacks(IBuilderActions instance)
+            {
+                if (instance == null || m_Wrapper.m_BuilderActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_BuilderActionsCallbackInterfaces.Add(instance);
+                @PlaceObject.started += instance.OnPlaceObject;
+                @PlaceObject.performed += instance.OnPlaceObject;
+                @PlaceObject.canceled += instance.OnPlaceObject;
+                @RotateObjectLeft.started += instance.OnRotateObjectLeft;
+                @RotateObjectLeft.performed += instance.OnRotateObjectLeft;
+                @RotateObjectLeft.canceled += instance.OnRotateObjectLeft;
+                @RotateObjectRight.started += instance.OnRotateObjectRight;
+                @RotateObjectRight.performed += instance.OnRotateObjectRight;
+                @RotateObjectRight.canceled += instance.OnRotateObjectRight;
+                @MousePosition.started += instance.OnMousePosition;
+                @MousePosition.performed += instance.OnMousePosition;
+                @MousePosition.canceled += instance.OnMousePosition;
+            }
+
+            private void UnregisterCallbacks(IBuilderActions instance)
+            {
+                @PlaceObject.started -= instance.OnPlaceObject;
+                @PlaceObject.performed -= instance.OnPlaceObject;
+                @PlaceObject.canceled -= instance.OnPlaceObject;
+                @RotateObjectLeft.started -= instance.OnRotateObjectLeft;
+                @RotateObjectLeft.performed -= instance.OnRotateObjectLeft;
+                @RotateObjectLeft.canceled -= instance.OnRotateObjectLeft;
+                @RotateObjectRight.started -= instance.OnRotateObjectRight;
+                @RotateObjectRight.performed -= instance.OnRotateObjectRight;
+                @RotateObjectRight.canceled -= instance.OnRotateObjectRight;
+                @MousePosition.started -= instance.OnMousePosition;
+                @MousePosition.performed -= instance.OnMousePosition;
+                @MousePosition.canceled -= instance.OnMousePosition;
+            }
+
+            public void RemoveCallbacks(IBuilderActions instance)
+            {
+                if (m_Wrapper.m_BuilderActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IBuilderActions instance)
+            {
+                foreach (var item in m_Wrapper.m_BuilderActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_BuilderActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public BuilderActions @Builder => new BuilderActions(this);
         public interface IPlayerActions
         {
             void OnMove(InputAction.CallbackContext context);
             void OnInteract(InputAction.CallbackContext context);
             void OnSettings(InputAction.CallbackContext context);
+        }
+        public interface IBuilderActions
+        {
+            void OnPlaceObject(InputAction.CallbackContext context);
+            void OnRotateObjectLeft(InputAction.CallbackContext context);
+            void OnRotateObjectRight(InputAction.CallbackContext context);
+            void OnMousePosition(InputAction.CallbackContext context);
         }
     }
 }

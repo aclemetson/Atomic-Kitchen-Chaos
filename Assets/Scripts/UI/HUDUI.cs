@@ -13,6 +13,9 @@ namespace AtomicKitchenChaos.UI
         [SerializeField] private TextMeshProUGUI timerGUI;
         [SerializeField] private Button menuButton;
 
+        [Header("Drop Down Menus")]
+        [SerializeField] private BuildMenuUI buildMenuUI;
+
         private float clock = 0f;
         private int lastDisplayedSecond = -1;
 
@@ -42,7 +45,8 @@ namespace AtomicKitchenChaos.UI
         }
 
         private void DisplayMenu() {
-            throw new NotImplementedException();
+            // Temporary, will be a dropdown
+            buildMenuUI.gameObject.SetActive(true);
         }
     }
 }

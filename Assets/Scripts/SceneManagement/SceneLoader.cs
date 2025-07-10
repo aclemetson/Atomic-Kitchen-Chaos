@@ -14,13 +14,12 @@ namespace AtomicKitchenChaos.SceneManagement
 
         public static void Init() {
             GameEventBus.Subscribe<QuitGameMessage>(QuitGame);
-            GameEventBus.Subscribe<LoadLevelMessage>(LoadLevel);
+            GameEventBus.Subscribe<LoadSceneMessage>(LoadScene);
         }
 
-
-        private static void LoadLevel(LoadLevelMessage message) {
-            levelDataPath = message.levelDataPath;
-            LoadScene(Utilities.GAME_SCENE);
+        private static void LoadScene(LoadSceneMessage payload) {
+            levelDataPath = string.IsNullOrEmpty(payload.levelDataPath) ? string.Empty : payload.levelDataPath;
+            LoadScene(payload.sceneName);
         }
 
         public static void LoadScene(string sceneName) {
