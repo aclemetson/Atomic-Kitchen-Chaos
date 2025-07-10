@@ -19,6 +19,7 @@ namespace AtomicKitchenChaos.Editor.MessageMappers {
 
         public static readonly Dictionary<Type, Type> DIALOGUE_TRIGGER_MAPPER = new() {
             { typeof(LevelStartMessage), typeof(EmptyMessageEditor) },
+            { typeof(GameOverMessage), typeof(EmptyMessageEditor) },
             { typeof(NetWorthMessage), typeof(NetWorthMessageEditor) },
             { typeof(QuarkCountMessage), typeof(QuarkCountMessageEditor) },
             { typeof(CounterUnlockMessage), typeof(CounterUnlockMessageEditor) },

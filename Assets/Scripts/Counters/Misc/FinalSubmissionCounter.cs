@@ -49,7 +49,7 @@ namespace AtomicKitchenChaos.Counters
         private void CheckFinalSubmission() {
             bool hasSubmittedAll = quantities.All(t => t <= 0);
             if (hasSubmittedAll) {
-                UnityEngine.Debug.Log("Has Submitted All");
+                GameEventBus.Publish(new FinalSubmissionCounterCompleteMessage());
             }
         }
     }

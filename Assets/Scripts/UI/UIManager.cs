@@ -20,9 +20,16 @@ namespace AtomicKitchenChaos.UI {
         [SerializeField] private FinalSubmissionUI finalSubmissionUI;
         [SerializeField] private ExoticMaterialPanelUI exoticMaterialPanelUI;
         [SerializeField] private DialoguePanelUI dialoguePanelUI;
+        [SerializeField] private GameOverPanelUI gameOverPanelUI;
         [SerializeField] private HUDUI hudUI;
-        [SerializeField] private GameObject mainMenuUI;
+        [SerializeField] private MainMenuUI mainMenuUI;
         [SerializeField] private Image background;
+
+        private bool menuIsUp = false;
+
+        private bool hasStartedUp = false;
+
+        public bool MenuIsUp => menuIsUp;
 
         private void Awake() {
             if (Instance == null) {
@@ -37,7 +44,6 @@ namespace AtomicKitchenChaos.UI {
 
         private void Start() {
             dialoguePanelUI.SetCloseMenu(() => {
-                mainMenuUI.SetActive(false);
                 GameEventBus.Publish(new DialogueHasFinishedMessage() { dialogueName = dialoguePanelUI.DialogueData.dialogueName });
             });
         }
@@ -46,31 +52,42 @@ namespace AtomicKitchenChaos.UI {
             if(sceneName == Utilities.GAME_SCENE) {
                 hudUI.gameObject.SetActive(true);
                 exoticMaterialPanelUI.gameObject.SetActive(true);
-                mainMenuUI.SetActive(false);
+                mainMenuUI.gameObject.SetActive(false);
                 background.gameObject.SetActive(false);
                 finalSubmissionUI.gameObject.SetActive(false);
+                gameOverPanelUI.gameObject.SetActive(false);
             } else {
                 levelSelectorPopulatorUI.gameObject.SetActive(false);
                 storagePanelPopulatorUI.gameObject.SetActive(false);
                 exoticMaterialPanelUI.gameObject.SetActive(false);
                 hudUI.gameObject.SetActive(false);
                 finalSubmissionUI.gameObject.SetActive(false);
+                gameOverPanelUI.gameObject.SetActive(false);
+
+                if (!hasStartedUp) {
+                    mainMenuUI.gameObject.SetActive(true);
+                    hasStartedUp = true;
+                }
             }
         }
 
         public void PopulateLevelSelector(string[] levelNames, UnityAction<int> action) {
+            menuIsUp = true;
             levelSelectorPopulatorUI.PopulateLevelSelection(levelNames, action);
         }
 
         public void PopulateSettingsMenu(string settingsText, List<ISettingsObject> list, UnityAction<int> action) {
+            menuIsUp = true;
             combinerSettingsPopulatorUI.PopulateSettingsMenu(settingsText, list, action);
         }
 
         public void PopulateStorageMenu(StorageData[] storageData, UnityAction<int> action) {
+            menuIsUp = true;
             storagePanelPopulatorUI.PopulateStorageMenu(storageData, action);
         }
 
         public void PopulateFinalSubmissionPanel(AtomicObjectSO[] atomicObjectSOs, int[] quantities) {
+            menuIsUp = true;
             finalSubmissionUI.PopulateFinalSubmissionPanel(atomicObjectSOs, quantities);
         }
 
@@ -83,8 +100,17 @@ namespace AtomicKitchenChaos.UI {
         }
 
         public void StartDialogue(DialogueData dialogueData) {
-            mainMenuUI.SetActive(true);
+            menuIsUp = true;
             dialoguePanelUI.StartDialogue(dialogueData);
+        }
+        
+        public void SetMainMenuLoadingAction(UnityAction mainMenuLoadingAction) {
+            gameOverPanelUI.SetMainMenuLoadingAction(mainMenuLoadingAction);
+        }
+
+        public void LevelFinished() {
+            menuIsUp = true;
+            gameOverPanelUI.LevelFinished();
         }
     }
 }

@@ -1,9 +1,7 @@
 {
-    "name": "AtomicKitchenChaos.InputActions",
-    "rootNamespace": "AtomicKitchenChaos.InputActions",
-    "references": [
-        "GUID:75469ad4d38634e559750d17036d5f7c"
-    ],
+    "name": "AtomicKitchenChaos.Grid",
+    "rootNamespace": "AtomicKitchenChaos.Grid",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

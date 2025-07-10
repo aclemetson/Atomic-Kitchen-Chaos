@@ -1,13 +1,16 @@
 using AtomicKitchenChaos.Counters;
 using AtomicKitchenChaos.Data;
 using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
+using AtomicKitchenChaos.InputActions;
 using AtomicKitchenChaos.Messages;
 using AtomicKitchenChaos.SceneManagement;
 using AtomicKitchenChaos.UI;
+using AtomicKitchenChaos.Utility;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace AtomicKitchenChaos.Level
 {
@@ -22,6 +25,7 @@ namespace AtomicKitchenChaos.Level
         private DialogueData[] dialogueDatas;
         private RequestManager requestManager;
         private string levelPath;
+        private bool levelEndsOnDialogue = false;
 
         private FinalSubmissionCounter finalSubmissionCounter = null;
 
@@ -49,6 +53,7 @@ namespace AtomicKitchenChaos.Level
             }
             dialogueDatas = data.ToArray();
 
+            AnyKeyInput.Init();
             requestManager = new RequestManager(levelRequirementData);
         }
 
@@ -58,19 +63,18 @@ namespace AtomicKitchenChaos.Level
             }
 
             foreach (var gameOutcome in gameOutcomeData.gameOutcomes) {
-                if(gameOutcome.message.GetType() == typeof(AtomicFinalSubmissionRequestMessage)) {
+                if (gameOutcome.message.GetType() == typeof(AtomicFinalSubmissionRequestMessage)) {
                     // Send to Final Submission Counter
-                    if(finalSubmissionCounter != null) {
-                        AtomicFinalSubmissionRequestMessage message = (AtomicFinalSubmissionRequestMessage)gameOutcome.message;
-                        finalSubmissionCounter.SetAtomicObjectRequest(message);
+                    if (finalSubmissionCounter != null) {
+                        AtomicFinalSubmissionRequestMessage finalMessage = (AtomicFinalSubmissionRequestMessage)gameOutcome.message;
+                        finalSubmissionCounter.SetAtomicObjectRequest(finalMessage);
                     } else {
                         Debug.LogError("Unable to Set Final Submission Request to Final Submission Counter. Counter did not load.");
                     }
-                } else {
-                    // Temporary
-                    UnlockMessage message = (UnlockMessage)gameOutcome.message;
-                    GameEventBus.AssignGenericUnlockSubscription(message, UpdateGameState);
                 }
+                    
+                UnlockMessage message = (UnlockMessage)gameOutcome.message;
+                GameEventBus.AssignGenericUnlockSubscription(message, UpdateGameState);
             }
 
             foreach(var dialogueData in dialogueDatas) {
@@ -78,7 +82,14 @@ namespace AtomicKitchenChaos.Level
                 AssignTriggeringChecks(dialogueData);
             }
 
+            UIManager.Instance.SetMainMenuLoadingAction(() => SceneLoader.LoadScene(Utilities.MAIN_MENU_SCENE));
+
             GameEventBus.Publish(new LevelStartMessage());
+
+            if (!levelEndsOnDialogue) {
+                GameEventBus.Subscribe<GameOverMessage>(LevelFinished);
+            }
+
         }
 
         private void LoadCounter(CounterData counter) {
@@ -112,12 +123,29 @@ namespace AtomicKitchenChaos.Level
         }
 
         private void UpdateGameState() {
-            Debug.Log("Game State is Successfully Updated");
+            // Check if all the GameOutcomeMessages are unlocked, if so, set gameover
+            bool allOutcomesComplete = gameOutcomeData.gameOutcomes.All(t => !((UnlockMessage)t.message).IsLocked);
+            if (allOutcomesComplete) {
+                GameEventBus.Publish(new GameOverMessage());
+            }
         }
 
         private void AssignTriggeringChecks(DialogueData dialogueData) {
             for (int i = 0; i < dialogueData.triggeringMessages.Length; i++) {
                 int staticIndex = i;
+
+                // If the message is a game over message, set the dialogue close to the end game sequence
+                if (dialogueData.triggeringMessages[staticIndex] is GameOverMessage) {
+                    var dialogueDataEntry = dialogueData.dialogueEntries[dialogueData.dialogueEntries.Length - 1];
+                    if(dialogueDataEntry.onDialogueFinished == null) {
+                        dialogueDataEntry.onDialogueFinished = new UnityEvent();
+                    }
+                    dialogueDataEntry.onDialogueFinished.AddListener(() => LevelFinished(new GameOverMessage()));
+                    dialogueData.dialogueEntries[dialogueData.dialogueEntries.Length - 1] = dialogueDataEntry;
+
+                    levelEndsOnDialogue = true;
+                }
+
                 UnlockMessage message = (UnlockMessage)dialogueData.triggeringMessages[staticIndex];
                 GameEventBus.AssignGenericUnlockSubscription(message, () => {
                     dialogueData.messagesHaveTriggered[staticIndex] = true;
@@ -126,6 +154,11 @@ namespace AtomicKitchenChaos.Level
                     }
                 });
             }
+        }
+
+        private void LevelFinished(GameOverMessage payload) {
+            UIManager.Instance.LevelFinished();
+            AnyKeyInput.Reset();
         }
     }
 }

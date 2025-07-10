@@ -1,3 +1,4 @@
+using AtomicKitchenChaos.InputActions;
 using AtomicKitchenChaos.Messages;
 using AtomicKitchenChaos.SceneManagement;
 using AtomicKitchenChaos.UI;
@@ -23,6 +24,7 @@ namespace AtomicKitchenChaos.Game
             }
 
             SceneLoader.Init();
+            AnyKeyInput.Init();
 
             GameEventBus.Subscribe<AddQuarks>(AddQuarks);
             GameEventBus.Subscribe<TryUnlockMessage>(TryUnlock);

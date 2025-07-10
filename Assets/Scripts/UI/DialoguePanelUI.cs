@@ -51,6 +51,7 @@ namespace AtomicKitchenChaos.UI
 
         internal void Next() {
             var entry = dialogueData.dialogueEntries[currentIndex];
+
             entry.onDialogueFinished?.Invoke();
 
             if (entry.pauseGame)

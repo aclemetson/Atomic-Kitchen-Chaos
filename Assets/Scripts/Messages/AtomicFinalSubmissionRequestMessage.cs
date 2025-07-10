@@ -10,6 +10,7 @@ namespace AtomicKitchenChaos.Messages
         public override void SubscriptionCheck(GameEventMessage payload) {
             AtomicFinalSubmissionRequestMessage message = (AtomicFinalSubmissionRequestMessage)payload;
             if(message.atomicObjectSOPath == atomicObjectSOPath && message.quantity <= 0) {
+                Unlock();
                 Trigger();
             }
         }

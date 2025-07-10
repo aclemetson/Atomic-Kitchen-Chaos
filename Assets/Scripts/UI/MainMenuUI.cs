@@ -14,7 +14,7 @@ namespace AtomicKitchenChaos.UI
 {
     public class MainMenuUI : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI pressAnyKeyToContinueLabel;
+        [SerializeField] private PressAnyKeyToContinueUI pressAnyKeyToContinuePanel;
         [SerializeField] private Button startGameButton;
         [SerializeField] private Button levelSelectButton;
         [SerializeField] private Button settingsButton;
@@ -25,7 +25,10 @@ namespace AtomicKitchenChaos.UI
             levelSelectButton.onClick.AddListener(LevelSelect);
             settingsButton.onClick.AddListener(Settings);
             quitButton.onClick.AddListener(QuitGame);
-            pressAnyKeyToContinueLabel.gameObject.SetActive(false);
+        }
+
+        private void Start() {
+            pressAnyKeyToContinuePanel.SetAdvanceScreen(() => pressAnyKeyToContinuePanel.gameObject.SetActive(false));
         }
 
         private void QuitGame() {

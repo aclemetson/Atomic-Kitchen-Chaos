@@ -1,4 +1,5 @@
 using AtomicKitchenChaos.InputActions;
+using AtomicKitchenChaos.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,6 +12,8 @@ namespace AtomicKitchenChaos.Players {
         private PlayerInputActions inputActions;
         private Vector2 moveDirection;
         private Camera mainCamera;
+
+        public bool CanMove => UIManager.Instance.MenuIsUp;
 
         private void Awake() {
             inputActions = new PlayerInputActions();
@@ -30,11 +33,14 @@ namespace AtomicKitchenChaos.Players {
 
         // Update is called once per frame
         private void Update() {
-            Vector3 inputDir = new Vector3(moveDirection.x, 0f, moveDirection.y).normalized;
-            Vector3 movement = transform.rotation * inputDir;
-            transform.Translate(movement * moveSpeed * Time.deltaTime, Space.World);
 
-            FaceMouse();
+            if (CanMove) {
+                Vector3 inputDir = new Vector3(moveDirection.x, 0f, moveDirection.y).normalized;
+                Vector3 movement = transform.rotation * inputDir;
+                transform.Translate(movement * moveSpeed * Time.deltaTime, Space.World);
+
+                FaceMouse();
+            }
         }
 
         private void FaceMouse() {
