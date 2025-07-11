@@ -58,8 +58,9 @@ namespace AtomicKitchenChaos.Grid
                 int staticIndex = i;
                 buildDataList.Add(new BuildData {
                     name = counterPrefabs[staticIndex].displayName,
+                    price = counterPrefabs[staticIndex].price,
                     selectAction = () => {
-                        SetSelectedPrefab(AssetDatabase.LoadAssetAtPath<Counter>(counterPrefabs[staticIndex].counterPrefabPath), counterPrefabs[staticIndex]);                
+                        SetSelectedPrefab(AssetDatabase.LoadAssetAtPath<Counter>(counterPrefabs[staticIndex].counterPrefabPath), counterPrefabs[staticIndex]);
                     }
                 });
             }
@@ -215,7 +216,6 @@ namespace AtomicKitchenChaos.Grid
         #region DeleteMode
 
         private void EnterDeleteMode() {
-            Debug.Log("Entering Delete Mode");
             CancelSelection();
             cancelCallback = _ => ExitDeleteMode();
             inputActions.Builder.CancelAction.performed += cancelCallback;
@@ -223,7 +223,6 @@ namespace AtomicKitchenChaos.Grid
         }
 
         private void ExitDeleteMode() {
-            Debug.Log("Exiting Delete Mode");
             inputActions.Builder.CancelAction.performed -= cancelCallback;
             deleteCounterState = false;
             ClearHoveredCounterHighlight();

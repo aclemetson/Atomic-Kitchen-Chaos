@@ -16,4 +16,5 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 2d792125982606148ba18b86016237eb, type: 2}
   counterPrefabPath: Assets/Prefabs/Counters/Combiners/Combiner.prefab
   lockedCounterPrefabPath: Assets/Prefabs/Counters/LockedCounter.prefab
+  price: 50
   recipeListSO: {fileID: 11400000, guid: 14930ef56fd491243811b0f6117c625c, type: 2}

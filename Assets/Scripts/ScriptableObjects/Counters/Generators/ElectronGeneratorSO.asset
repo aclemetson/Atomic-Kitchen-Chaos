@@ -16,4 +16,5 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 32b70a4a5592abb40ba182d420224bb7, type: 2}
   counterPrefabPath: Assets/Prefabs/Counters/Generators/Generator.prefab
   lockedCounterPrefabPath: Assets/Prefabs/Counters/LockedCounter.prefab
+  price: 25
   atomicObjectSO: {fileID: 11400000, guid: 23818d71bf5f9ca40980b3799d6db687, type: 2}

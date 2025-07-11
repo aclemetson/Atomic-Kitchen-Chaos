@@ -19,7 +19,7 @@ namespace AtomicKitchenChaos.UI
         private void Awake() {
             startGameButton.onClick.AddListener(StartGame);
             levelSelectButton.onClick.AddListener(LevelSelect);
-            settingsButton.onClick.AddListener(Settings);
+            settingsButton.onClick.AddListener(RTSGame);
             quitButton.onClick.AddListener(QuitGame);
         }
 
@@ -31,7 +31,7 @@ namespace AtomicKitchenChaos.UI
             GameEventBus.Publish(new QuitGameMessage());
         }
 
-        private void Settings() {
+        private void RTSGame() {
             // Temporary send to RTS Scene
             GameEventBus.Publish(new LoadSceneMessage() { sceneName = Utilities.RTS_SCENE });
         }

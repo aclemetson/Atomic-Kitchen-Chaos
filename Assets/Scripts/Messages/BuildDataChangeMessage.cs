@@ -6,6 +6,7 @@ namespace AtomicKitchenChaos.Messages {
 
         public struct BuildData {
             public string name;
+            public long price;
             public UnityAction selectAction;
         }
     }

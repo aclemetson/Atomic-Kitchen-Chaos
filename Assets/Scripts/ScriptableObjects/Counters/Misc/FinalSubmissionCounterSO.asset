@@ -16,3 +16,4 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 43e32e65fdef51e408be883d83d2c386, type: 2}
   counterPrefabPath: Assets/Prefabs/Counters/Misc/FinalSubmissionCounter.prefab
   lockedCounterPrefabPath: Assets/Prefabs/Counters/LockedCounter.prefab
+  price: 200

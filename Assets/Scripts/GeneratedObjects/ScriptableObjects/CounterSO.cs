@@ -11,5 +11,6 @@ namespace AtomicKitchenChaos.GeneratedObjects.ScriptableObjects
         public Material material;
         public string counterPrefabPath;
         public string lockedCounterPrefabPath;
+        public long price;
     }
 }

@@ -16,3 +16,4 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 84f935063e937bb44b5bc00ec64c2087, type: 2}
   counterPrefabPath: Assets/Prefabs/Counters/Misc/Incinerator.prefab
   lockedCounterPrefabPath: Assets/Prefabs/Counters/LockedCounter.prefab
+  price: 50
