@@ -14,12 +14,14 @@ namespace AtomicKitchenChaos.Counters {
         protected CounterSO counterSO;
         private bool addedInteraction = false;
 
+        public CounterSO CounterSO => counterSO;
+
         protected abstract void Interact();
         protected abstract void SettingsInteraction();
 
         protected virtual void Start() {
             playerManager = PlayerManager.Instance;
-            CustomizeVisual();
+            ResetVisual();
         }
 
         private void OnTriggerEnter(Collider other) {
@@ -70,10 +72,17 @@ namespace AtomicKitchenChaos.Counters {
             public AtomLabelContainerUI atomLabelContainerUI;
         }
 
-        private void CustomizeVisual() {
+        public void ResetVisual() {
             var meshRenderer = GetComponentInChildren<MeshRenderer>();
             if(meshRenderer) {
                 meshRenderer.material = counterSO.material;
+            }
+        }
+
+        public void SetColor(Color color) {
+            var meshRenderer = GetComponentInChildren<MeshRenderer>();
+            if (meshRenderer) {
+                meshRenderer.material.color = color;
             }
         }
     }

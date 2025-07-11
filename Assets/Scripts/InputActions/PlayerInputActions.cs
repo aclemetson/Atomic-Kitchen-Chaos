@@ -176,6 +176,42 @@ namespace AtomicKitchenChaos.InputActions
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""MoveCamera"",
+                    ""type"": ""Value"",
+                    ""id"": ""3efd2458-a00e-4864-ada6-1a5812f5d35e"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ZoomCamera"",
+                    ""type"": ""Value"",
+                    ""id"": ""803ff4fa-1a09-4208-bcd1-47e81d21d509"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RotateCamera"",
+                    ""type"": ""Value"",
+                    ""id"": ""bb923fcb-2c1d-4478-9305-68c52448ad71"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""CancelAction"",
+                    ""type"": ""Button"",
+                    ""id"": ""52d9b8a1-6694-4c19-a543-2c151375c685"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -222,6 +258,138 @@ namespace AtomicKitchenChaos.InputActions
                     ""action"": ""MousePosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""5fc2858f-352f-431b-8a96-56445353dd95"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveCamera"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""219dfa25-8f86-452b-8f9d-d4f86631fa82"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""093c6e1e-8f77-4f0c-be4b-b1919dc00d78"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""5422efb5-6fce-4bc8-bbce-fec288785057"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""ae3c7d6a-1008-4e45-80b0-eea435e095fa"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""88450833-77a8-440e-a1ba-33fdba937e20"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ZoomCamera"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""d54a7253-f255-4ed4-8847-22058ffbdf70"",
+                    ""path"": ""<Mouse>/scroll/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ZoomCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""cfb7ebfb-4c41-46f9-9f63-2f355d3f7ed5"",
+                    ""path"": ""<Mouse>/scroll/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ZoomCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""6d59360d-285c-4412-bbb8-dd0a437973ea"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCamera"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""0e3f4f1d-b749-4bb5-ac03-c9b3d286d968"",
+                    ""path"": ""<Mouse>/backButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""c615e9b5-70c3-4a56-86fa-e96c86380f2d"",
+                    ""path"": ""<Mouse>/{Forward}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3ac40c44-106a-4cdd-ab84-36d0003c8cfd"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CancelAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -239,6 +407,10 @@ namespace AtomicKitchenChaos.InputActions
             m_Builder_RotateObjectLeft = m_Builder.FindAction("RotateObjectLeft", throwIfNotFound: true);
             m_Builder_RotateObjectRight = m_Builder.FindAction("RotateObjectRight", throwIfNotFound: true);
             m_Builder_MousePosition = m_Builder.FindAction("MousePosition", throwIfNotFound: true);
+            m_Builder_MoveCamera = m_Builder.FindAction("MoveCamera", throwIfNotFound: true);
+            m_Builder_ZoomCamera = m_Builder.FindAction("ZoomCamera", throwIfNotFound: true);
+            m_Builder_RotateCamera = m_Builder.FindAction("RotateCamera", throwIfNotFound: true);
+            m_Builder_CancelAction = m_Builder.FindAction("CancelAction", throwIfNotFound: true);
         }
 
         ~@PlayerInputActions()
@@ -372,6 +544,10 @@ namespace AtomicKitchenChaos.InputActions
         private readonly InputAction m_Builder_RotateObjectLeft;
         private readonly InputAction m_Builder_RotateObjectRight;
         private readonly InputAction m_Builder_MousePosition;
+        private readonly InputAction m_Builder_MoveCamera;
+        private readonly InputAction m_Builder_ZoomCamera;
+        private readonly InputAction m_Builder_RotateCamera;
+        private readonly InputAction m_Builder_CancelAction;
         public struct BuilderActions
         {
             private @PlayerInputActions m_Wrapper;
@@ -380,6 +556,10 @@ namespace AtomicKitchenChaos.InputActions
             public InputAction @RotateObjectLeft => m_Wrapper.m_Builder_RotateObjectLeft;
             public InputAction @RotateObjectRight => m_Wrapper.m_Builder_RotateObjectRight;
             public InputAction @MousePosition => m_Wrapper.m_Builder_MousePosition;
+            public InputAction @MoveCamera => m_Wrapper.m_Builder_MoveCamera;
+            public InputAction @ZoomCamera => m_Wrapper.m_Builder_ZoomCamera;
+            public InputAction @RotateCamera => m_Wrapper.m_Builder_RotateCamera;
+            public InputAction @CancelAction => m_Wrapper.m_Builder_CancelAction;
             public InputActionMap Get() { return m_Wrapper.m_Builder; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -401,6 +581,18 @@ namespace AtomicKitchenChaos.InputActions
                 @MousePosition.started += instance.OnMousePosition;
                 @MousePosition.performed += instance.OnMousePosition;
                 @MousePosition.canceled += instance.OnMousePosition;
+                @MoveCamera.started += instance.OnMoveCamera;
+                @MoveCamera.performed += instance.OnMoveCamera;
+                @MoveCamera.canceled += instance.OnMoveCamera;
+                @ZoomCamera.started += instance.OnZoomCamera;
+                @ZoomCamera.performed += instance.OnZoomCamera;
+                @ZoomCamera.canceled += instance.OnZoomCamera;
+                @RotateCamera.started += instance.OnRotateCamera;
+                @RotateCamera.performed += instance.OnRotateCamera;
+                @RotateCamera.canceled += instance.OnRotateCamera;
+                @CancelAction.started += instance.OnCancelAction;
+                @CancelAction.performed += instance.OnCancelAction;
+                @CancelAction.canceled += instance.OnCancelAction;
             }
 
             private void UnregisterCallbacks(IBuilderActions instance)
@@ -417,6 +609,18 @@ namespace AtomicKitchenChaos.InputActions
                 @MousePosition.started -= instance.OnMousePosition;
                 @MousePosition.performed -= instance.OnMousePosition;
                 @MousePosition.canceled -= instance.OnMousePosition;
+                @MoveCamera.started -= instance.OnMoveCamera;
+                @MoveCamera.performed -= instance.OnMoveCamera;
+                @MoveCamera.canceled -= instance.OnMoveCamera;
+                @ZoomCamera.started -= instance.OnZoomCamera;
+                @ZoomCamera.performed -= instance.OnZoomCamera;
+                @ZoomCamera.canceled -= instance.OnZoomCamera;
+                @RotateCamera.started -= instance.OnRotateCamera;
+                @RotateCamera.performed -= instance.OnRotateCamera;
+                @RotateCamera.canceled -= instance.OnRotateCamera;
+                @CancelAction.started -= instance.OnCancelAction;
+                @CancelAction.performed -= instance.OnCancelAction;
+                @CancelAction.canceled -= instance.OnCancelAction;
             }
 
             public void RemoveCallbacks(IBuilderActions instance)
@@ -446,6 +650,10 @@ namespace AtomicKitchenChaos.InputActions
             void OnRotateObjectLeft(InputAction.CallbackContext context);
             void OnRotateObjectRight(InputAction.CallbackContext context);
             void OnMousePosition(InputAction.CallbackContext context);
+            void OnMoveCamera(InputAction.CallbackContext context);
+            void OnZoomCamera(InputAction.CallbackContext context);
+            void OnRotateCamera(InputAction.CallbackContext context);
+            void OnCancelAction(InputAction.CallbackContext context);
         }
     }
 }

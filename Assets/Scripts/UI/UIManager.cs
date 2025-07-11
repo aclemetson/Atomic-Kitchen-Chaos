@@ -141,6 +141,10 @@ namespace AtomicKitchenChaos.UI {
             buildMenuUI.SetBuildMenuInformation(payload.buildData);
         }
 
+        public void SetDeleteButtonAction(UnityAction deleteButtonAction) {
+            hudUI.SetDeleteButtonAction(deleteButtonAction);
+        }
+
         #endregion
     }
 }

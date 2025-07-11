@@ -1,0 +1,19 @@
+{
+    "name": "AtomicKitchenChaos.Camera",
+    "rootNamespace": "AtomicKitchenChaos.Camera",
+    "references": [
+        "GUID:4307f53044263cf4b835bd812fc161a4",
+        "GUID:2e617c9ea973ce84fb3a0fe5f5d5cab2",
+        "GUID:59784d755906b7e4683d3a273915ecab",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

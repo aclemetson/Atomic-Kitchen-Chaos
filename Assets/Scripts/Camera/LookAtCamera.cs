@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace AtomicKitchenChaos {
+namespace AtomicKitchenChaos.Camera {
     public class LookAtCamera : MonoBehaviour {
         private enum Mode {
             LookAt,
@@ -14,20 +14,20 @@ namespace AtomicKitchenChaos {
         private void LateUpdate() {
             switch (mode) {
                 case Mode.LookAt:
-                    transform.LookAt(Camera.main.transform);
+                    transform.LookAt(UnityEngine.Camera.main.transform);
                     break;
 
                 case Mode.LookAtInverted:
-                    Vector3 dirFromCamera = transform.position - Camera.main.transform.forward;
+                    Vector3 dirFromCamera = transform.position - UnityEngine.Camera.main.transform.forward;
                     transform.LookAt(transform.position + dirFromCamera);
                     break;
 
                 case Mode.CameraForward:
-                    transform.forward = Camera.main.transform.forward;
+                    transform.forward = UnityEngine.Camera.main.transform.forward;
                     break;
 
                 case Mode.CameraForwardInverted:
-                    transform.forward = -Camera.main.transform.forward;
+                    transform.forward = -UnityEngine.Camera.main.transform.forward;
                     break;
             }
         }

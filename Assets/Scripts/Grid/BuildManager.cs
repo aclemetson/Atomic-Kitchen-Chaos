@@ -2,6 +2,7 @@ using AtomicKitchenChaos.Counters;
 using AtomicKitchenChaos.GeneratedObjects.ScriptableObjects;
 using AtomicKitchenChaos.InputActions;
 using AtomicKitchenChaos.Messages;
+using AtomicKitchenChaos.UI;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -27,6 +28,14 @@ namespace AtomicKitchenChaos.Grid
         private InputAction placeAction;
         private Tile previousHoverTile = null;
         private BuildData[] buildData;
+        private float tileSpacing;
+        private System.Action<InputAction.CallbackContext> cancelCallback;
+
+        // Counter Delete variables
+        private bool deleteCounterState = false;
+        private Counter hoveredCounter = null;
+
+        public PlayerInputActions InputActions => inputActions;
 
         private void Awake() {
             if (Instance == null) {
@@ -39,14 +48,18 @@ namespace AtomicKitchenChaos.Grid
             GenerateBuildData();
         }
 
+        private void Start() {
+            UIManager.Instance.SetDeleteButtonAction(() => EnterDeleteMode());
+        }
+
         private void GenerateBuildData() {
             List<BuildData> buildDataList = new List<BuildData>();
             for (int i = 0; i < counterPrefabs.Length; i++) {
                 int staticIndex = i;
                 buildDataList.Add(new BuildData {
-                    name = counterPrefabs[i].displayName,
+                    name = counterPrefabs[staticIndex].displayName,
                     selectAction = () => {
-                        selectedPrefab = AssetDatabase.LoadAssetAtPath<Counter>(counterPrefabs[staticIndex].counterPrefabPath);
+                        SetSelectedPrefab(AssetDatabase.LoadAssetAtPath<Counter>(counterPrefabs[staticIndex].counterPrefabPath), counterPrefabs[staticIndex]);                
                     }
                 });
             }
@@ -54,7 +67,8 @@ namespace AtomicKitchenChaos.Grid
             GameEventBus.Publish(new BuildDataChangeMessage() { buildData = buildData });
         }
 
-        public void Initialize(Tile[,] grid) {
+        public void Initialize(Tile[,] grid, float tileSpacing) {
+            this.tileSpacing = tileSpacing;
             tileGrid = grid;
             gridSize = new Vector2Int(grid.GetLength(0), grid.GetLength(1));
         }
@@ -72,6 +86,11 @@ namespace AtomicKitchenChaos.Grid
             inputActions.Disable();
         }
         private void Update() {
+            if(deleteCounterState) {
+                HandleDeleteMode();
+                return;
+            }
+
             if (selectedPrefab == null || previewInstance == null) return;
 
             Vector3 mouseWorld = GetMouseWorldPosition();
@@ -81,21 +100,44 @@ namespace AtomicKitchenChaos.Grid
             var gridIndex = WorldToGridIndex(snapped);
             bool valid = CanPlace(gridIndex, GetObjectSize(selectedPrefab));
 
-            Tile hoverTile = tileGrid[gridIndex.x, gridIndex.y];
-            if (hoverTile != previousHoverTile) {
-                previousHoverTile?.Highlight(false);
-                hoverTile?.Highlight(true);
-                previousHoverTile = hoverTile;
+            if (valid && IsWithinGrid(gridIndex)) {
+                Tile hoverTile = tileGrid[gridIndex.x, gridIndex.y];
+                if (hoverTile != previousHoverTile) {
+                    previousHoverTile?.Highlight(false);
+                    hoverTile?.Highlight(true);
+                    previousHoverTile = hoverTile;
+                }
             }
 
             SetPreviewColor(valid ? Color.green : Color.red);
         }
 
-        public void SetSelectedPrefab(Counter prefab) {
+        public void SetSelectedPrefab(Counter prefab, CounterSO counterSO) {
             selectedPrefab = prefab;
+            selectedPrefab.SetCounterSO(counterSO);
             if (previewInstance != null) Destroy(previewInstance);
             previewInstance = Instantiate(prefab);
+            previewInstance.SetCounterSO(counterSO);
             previewInstance.GetComponent<Collider>().enabled = false;
+            cancelCallback = _ => CancelSelection();
+            inputActions.Builder.CancelAction.performed += cancelCallback;
+        }
+
+        private void CancelSelection() {
+            selectedPrefab = null;
+            if (previewInstance != null) Destroy(previewInstance.gameObject);
+
+            // Make sure all Tiles are unhighlighted
+            for (int x = 0; x < gridSize.x; x++) {
+                for (int y = 0; y < gridSize.y; y++) {
+                    tileGrid[x, y].TurnOff();
+                }
+            }
+
+            if (cancelCallback != null) {
+                inputActions.Builder.CancelAction.performed -= cancelCallback;
+                cancelCallback = null;
+            }
         }
 
         private void OnPlaceObject(InputAction.CallbackContext ctx) {
@@ -108,6 +150,7 @@ namespace AtomicKitchenChaos.Grid
 
             if (CanPlace(gridIndex, size)) {
                 var obj = Instantiate(selectedPrefab, snapped, Quaternion.identity);
+                obj.SetCounterSO(selectedPrefab.CounterSO);
                 MarkGridOccupied(gridIndex, size);
             }
         }
@@ -122,13 +165,15 @@ namespace AtomicKitchenChaos.Grid
         }
 
         private Vector3 SnapToGrid(Vector3 worldPos) {
-            int x = Mathf.RoundToInt(worldPos.x);
-            int z = Mathf.RoundToInt(worldPos.z);
-            return new Vector3(x, 0, z);
+            int x = Mathf.FloorToInt(worldPos.x / tileSpacing);
+            int z = Mathf.FloorToInt(worldPos.z / tileSpacing);
+            return new Vector3(x * tileSpacing, 1, z * tileSpacing);
         }
 
         private Vector2Int WorldToGridIndex(Vector3 worldPos) {
-            return new Vector2Int(Mathf.RoundToInt(worldPos.x), Mathf.RoundToInt(worldPos.z));
+            int x = Mathf.FloorToInt(worldPos.x / tileSpacing);
+            int y = Mathf.FloorToInt(worldPos.z / tileSpacing);
+            return new Vector2Int(x, y);
         }
 
         private bool CanPlace(Vector2Int start, Vector2Int size) {
@@ -155,14 +200,67 @@ namespace AtomicKitchenChaos.Grid
 
         private Vector2Int GetObjectSize(Counter prefab) {
             var placeable = prefab.GetComponent<PlaceableObject>();
-            return placeable != null ? placeable.Size : 2 * Vector2Int.one;
+            return placeable != null ? placeable.Size : Vector2Int.one;
         }
 
         private void SetPreviewColor(Color color) {
             if (previewInstance == null) return;
-            foreach(var r in previewInstance.GetComponentsInChildren<Renderer>()) {
-                r.material.color = color;
+            previewInstance.SetColor(color);
+        }
+
+        private bool IsWithinGrid(Vector2Int index) {
+            return index.x >= 0 && index.y >= 0 && index.x < gridSize.x && index.y < gridSize.y;
+        }
+
+        #region DeleteMode
+
+        private void EnterDeleteMode() {
+            Debug.Log("Entering Delete Mode");
+            CancelSelection();
+            cancelCallback = _ => ExitDeleteMode();
+            inputActions.Builder.CancelAction.performed += cancelCallback;
+            deleteCounterState = true;
+        }
+
+        private void ExitDeleteMode() {
+            Debug.Log("Exiting Delete Mode");
+            inputActions.Builder.CancelAction.performed -= cancelCallback;
+            deleteCounterState = false;
+            ClearHoveredCounterHighlight();
+        }
+
+        private void HandleDeleteMode() {
+            Vector3 mouseWorld = GetMouseWorldPosition();
+            Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f)) {
+                var counter = hit.collider.GetComponent<Counter>();
+                if (counter != null) {
+                    if (hoveredCounter != counter) {
+                        ClearHoveredCounterHighlight();
+
+                        hoveredCounter = counter;
+                        hoveredCounter.SetColor(Color.red);
+                    }
+
+                    if (Mouse.current.leftButton.wasPressedThisFrame) {
+                        Destroy(hoveredCounter.gameObject);
+                        hoveredCounter = null;
+                    }
+                } else {
+                    ClearHoveredCounterHighlight();
+                }
+            } else {
+                ClearHoveredCounterHighlight();
             }
         }
+
+        private void ClearHoveredCounterHighlight() {
+            if (hoveredCounter != null) {
+                hoveredCounter.ResetVisual();
+                hoveredCounter = null;
+            }
+        }
+
+        #endregion
     }
 }

@@ -33,5 +33,9 @@ namespace AtomicKitchenChaos.Grid
                 tileRenderer.material.color = color;
             }
         }
+
+        public void TurnOff() {
+            SetColor(defaultColor);
+        }
     }
 }
